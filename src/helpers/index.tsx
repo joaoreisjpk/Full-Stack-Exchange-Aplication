@@ -7,22 +7,19 @@ export const validateInputs = ({
   gbpToUsd = 0,
   usdToGbp = 0,
 }: validateInputProps) => {
-  if (paredesValidation) {
+  if (usdToGbp < 0 && usdToGbp < 0) {
     return {
-      paredeAltura: paredesErrorMessage,
-      paredeComprimento: paredesErrorMessage,
+      usdToGbp: 'Please, put a number bigger then 0',
     };
-  } else if (paredesAreaValidation) {
+    
+  } else if (gbpToUsd < 0) {
     return {
-      paredeAltura: ' ',
-      paredeComprimento: paredesAreaErrorMessage,
-      portasNumero: ' ',
-      janelasNumero: paredesAreaErrorMessage,
+      gbpToUsd: 'Please, put a number bigger then 0',
     };
-  } else if (alturaDaParedeValidation) {
+  } else if (gbpToUsd > 0 && usdToGbp > 0) {
     return {
-      paredeAltura: alturaDaParedeErrorMessage,
-      portasNumero: ' ',
+      gbpToUsd: 'Only one input can be filled',
+      usdToGbp: 'Only one input can be filled',
     };
   }
   return {};
