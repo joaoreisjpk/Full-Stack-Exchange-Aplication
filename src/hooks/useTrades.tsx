@@ -1,4 +1,4 @@
-import { Children, createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface IContext {
   trades: string[];
