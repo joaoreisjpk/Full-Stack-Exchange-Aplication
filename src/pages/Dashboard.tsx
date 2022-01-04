@@ -17,8 +17,8 @@ interface InputsDataProps {
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  const [gbpExchange, setGbpExchange] = useState<number>();
-  const [usdExchange, setUsdExchange] = useState<number>();
+  const [gbpExchange, setGbpExchange] = useState<string>();
+  const [usdExchange, setUsdExchange] = useState<string>();
 
   useEffect(() => {
     const api = async () => {
@@ -37,13 +37,13 @@ export default function Dashboard() {
       newStorage.push({
         gbpToUsd,
         currencyExchange: usdExchange,
-        exchangeAmount: Number(gbpToUsd) * usdExchange,
+        exchangeAmount: Number(gbpToUsd) * Number(usdExchange),
       });
     } else {
       newStorage.push({
         usdToGbp,
         currencyExchange: gbpExchange,
-        exchangeAmount: Number(usdToGbp) * gbpExchange,
+        exchangeAmount: Number(usdToGbp) * Number(gbpExchange),
         date: new Date(),
       });
     }

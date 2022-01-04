@@ -1,5 +1,6 @@
-import { ButtonGroup, Grid, Stack, Typography } from '@mui/material';
+import { Grid, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import HistoryItem from './HistoryItem';
 
 interface HistoryProps {
   gbpToUsd?: string;
@@ -7,10 +8,6 @@ interface HistoryProps {
   currencyExchange: string;
   exchangeAmount: string;
   date: string;
-}
-
-interface ItemProps extends HistoryProps {
-  title: string;
 }
 
 export default function History() {
@@ -21,35 +18,6 @@ export default function History() {
 
     setHistoryList(JSON.parse(getStorage));
   }, []);
-
-  function HistoryItem({
-    title,
-    date,
-    gbpToUsd,
-    exchangeAmount,
-    currencyExchange,
-    usdToGbp,
-  }: ItemProps) {
-    return (
-      <section>
-        <Typography variant='h5'>
-          The currency exchange was: {title}
-        </Typography>
-        <Typography variant='h5'>
-          On {date}
-        </Typography>
-        <Typography variant='h5'>
-          With an amount of {gbpToUsd || usdToGbp}
-        </Typography>
-        <Typography variant='h5'>
-          The currency Rate was {currencyExchange}
-        </Typography>
-        <Typography variant='h5'>
-          Witch turned into {exchangeAmount}
-        </Typography>
-      </section>
-    );
-  }
 
   if (!historyList) return <div>Carregando...</div>;
 
