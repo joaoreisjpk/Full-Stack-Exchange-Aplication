@@ -58,14 +58,13 @@ export default function Dashboard() {
         fontSize='1.8rem'
         align='center'
         marginTop={5}
-        marginLeft={-5}
       >
         Currency Exchange
       </Typography>
-      <Typography fontSize='.8rem' marginLeft={-5} align='center'>
+      <Typography fontSize='.8rem' align='center'>
         The currency exchange from USD to GBP is {gbpExchange}
       </Typography>
-      <Typography fontSize='.8rem' marginLeft={-5} align='center'>
+      <Typography fontSize='.8rem' align='center'>
         The currency exchange from GBP to USD is {usdExchange}
       </Typography>
       <Formik
