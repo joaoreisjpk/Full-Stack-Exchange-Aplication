@@ -6,6 +6,8 @@ interface HistoryProps {
   currencyExchange: string;
   exchangeAmount: string;
   date: string;
+  id?: string;
+  handleDeleteTrade: (id: string) => void;
 }
 
 interface ItemProps extends HistoryProps {
@@ -19,24 +21,29 @@ export default function HistoryItem({
   exchangeAmount,
   currencyExchange,
   usdToGbp,
+  id,
+  handleDeleteTrade,
 }: ItemProps) {
   return (
-    <section>
+    <section id={id}>
       <Typography variant='h5'>
         The currency exchange was: {title}
       </Typography>
       <Typography variant='h5'>
-        White a Rate of {currencyExchange}
+        White a Rate of {Number(currencyExchange).toFixed(2)}
       </Typography>
       <Typography variant='h5'>
         On {date}
       </Typography>
       <Typography variant='h5'>
-        With an amount of {gbpToUsd || usdToGbp}
+        With an amount of {Number(gbpToUsd || usdToGbp).toFixed(2)}
       </Typography>
       <Typography variant='h5'>
-        Witch turned into {exchangeAmount}
+        Witch turned into {Number(exchangeAmount).toFixed(2)}
       </Typography>
+      <button type="button" onClick={() => handleDeleteTrade(id)}>
+        Delete from History
+      </button>
     </section>
   );
 }

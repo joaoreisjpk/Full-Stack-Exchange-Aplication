@@ -9,7 +9,7 @@ import { calculateCurrencyExchange } from '../api/currencyAPI';
 import { validateInputs } from '../helpers';
 import { useNavigate } from 'react-router-dom';
 
-import { io } from 'socket.io-client';
+import { useTrades } from '../hooks/useTrades';
 
 interface InputsDataProps {
   gbpToUsd: number | '';
@@ -18,17 +18,15 @@ interface InputsDataProps {
 
 export default function Dashboard() {
   const navigate = useNavigate();
+  const { socket } = useTrades();
 
   const [gbpExchange, setGbpExchange] = useState<string>();
   const [usdExchange, setUsdExchange] = useState<string>();
-
-  const socket = io('http://localhost:4000/');
-
-  socket.on('connect', () => {
-    console.log(`Connected with ${socket.id}`);
-  });
-
+  
   useEffect(() => {
+    socket.on('connect', () => {
+      console.log(`Connected with ${socket.id}`);
+    });
     const api = async () => {
       setGbpExchange(await calculateCurrencyExchange('USD', 'GBP'));
       setUsdExchange(await calculateCurrencyExchange('GBP', 'USD'));
@@ -38,8 +36,7 @@ export default function Dashboard() {
 
   function submitHandler(inputsData: InputsDataProps, resetForm: () => void) {
     const { gbpToUsd, usdToGbp } = inputsData;
-
-    
+    socket.emit('tradesUpdate');
 
     if (!!gbpToUsd) {
       fetch('http://localhost:3333/trades', {
@@ -51,12 +48,6 @@ export default function Dashboard() {
           exchangeAmount: Number(gbpToUsd) * Number(usdExchange),
         }),
       });
-
-      socket.emit('tradesUpdate', JSON.stringify({
-        gbpToUsd,
-        currencyExchange: usdExchange,
-        exchangeAmount: Number(gbpToUsd) * Number(usdExchange),
-      }));
     } else {
       fetch('http://localhost:3333/trades', {
         method: 'POST',
@@ -67,12 +58,6 @@ export default function Dashboard() {
           exchangeAmount: Number(usdToGbp) * Number(gbpExchange),
         }),
       });
-
-      socket.emit('tradesUpdate', JSON.stringify({
-        usdToGbp,
-        currencyExchange: gbpExchange,
-        exchangeAmount: Number(usdToGbp) * Number(usdExchange),
-      }));
     }
     resetForm();
   }
@@ -83,10 +68,10 @@ export default function Dashboard() {
         Currency Exchange
       </Typography>
       <Typography fontSize='.8rem' align='center'>
-        The currency exchange from USD to GBP is {gbpExchange}
+        The currency exchange from USD to GBP is {Number(gbpExchange).toFixed(2)}
       </Typography>
       <Typography fontSize='.8rem' align='center'>
-        The currency exchange from GBP to USD is {usdExchange}
+        The currency exchange from GBP to USD is {Number(usdExchange).toFixed(2)}
       </Typography>
       <Formik
         initialValues={{
