@@ -7,7 +7,7 @@ export const validateInputs = ({
   gbpToUsd = 0,
   usdToGbp = 0,
 }: validateInputProps) => {
-  if (usdToGbp < 0 && usdToGbp < 0) {
+  if (usdToGbp <= 0 && usdToGbp <= 0) {
     return {
       usdToGbp: 'Please, put a number bigger then 0',
     };

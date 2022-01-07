@@ -1,5 +1,17 @@
 import { Typography } from "@mui/material";
 
+interface HistoryProps {
+  gbpToUsd?: string;
+  usdToGbp?: string;
+  currencyExchange: string;
+  exchangeAmount: string;
+  date: string;
+}
+
+interface ItemProps extends HistoryProps {
+  title: string;
+}
+
 export default function HistoryItem({
   title,
   date,

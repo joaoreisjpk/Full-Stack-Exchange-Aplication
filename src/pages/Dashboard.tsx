@@ -9,6 +9,8 @@ import { calculateCurrencyExchange } from '../api/currencyAPI';
 import { validateInputs } from '../helpers';
 import { useNavigate } from 'react-router-dom';
 
+import { io } from 'socket.io-client';
+
 interface InputsDataProps {
   gbpToUsd: number | '';
   usdToGbp: number | '';
@@ -20,6 +22,12 @@ export default function Dashboard() {
   const [gbpExchange, setGbpExchange] = useState<string>();
   const [usdExchange, setUsdExchange] = useState<string>();
 
+  const socket = io('http://localhost:4000/');
+
+  socket.on('connect', () => {
+    console.log(`Connected with ${socket.id}`);
+  });
+
   useEffect(() => {
     const api = async () => {
       setGbpExchange(await calculateCurrencyExchange('USD', 'GBP'));
@@ -30,35 +38,48 @@ export default function Dashboard() {
 
   function submitHandler(inputsData: InputsDataProps, resetForm: () => void) {
     const { gbpToUsd, usdToGbp } = inputsData;
-    const getStorage = localStorage.getItem('history') || '[]';
-    let newStorage = [...JSON.parse(getStorage)];
+
+    
 
     if (!!gbpToUsd) {
-      newStorage.push({
+      fetch('http://localhost:3333/trades', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          gbpToUsd,
+          currencyExchange: usdExchange,
+          exchangeAmount: Number(gbpToUsd) * Number(usdExchange),
+        }),
+      });
+
+      socket.emit('tradesUpdate', JSON.stringify({
         gbpToUsd,
         currencyExchange: usdExchange,
         exchangeAmount: Number(gbpToUsd) * Number(usdExchange),
-      });
+      }));
     } else {
-      newStorage.push({
+      fetch('http://localhost:3333/trades', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          usdToGbp,
+          currencyExchange: gbpExchange,
+          exchangeAmount: Number(usdToGbp) * Number(gbpExchange),
+        }),
+      });
+
+      socket.emit('tradesUpdate', JSON.stringify({
         usdToGbp,
         currencyExchange: gbpExchange,
-        exchangeAmount: Number(usdToGbp) * Number(gbpExchange),
-        date: new Date(),
-      });
+        exchangeAmount: Number(usdToGbp) * Number(usdExchange),
+      }));
     }
-
-    localStorage.setItem('history', JSON.stringify(newStorage));
     resetForm();
   }
 
   return (
     <Box>
-      <Typography
-        fontSize='1.8rem'
-        align='center'
-        marginTop={5}
-      >
+      <Typography fontSize='1.8rem' align='center' marginTop={5}>
         Currency Exchange
       </Typography>
       <Typography fontSize='.8rem' align='center'>

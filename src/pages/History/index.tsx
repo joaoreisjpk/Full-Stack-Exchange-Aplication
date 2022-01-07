@@ -1,6 +1,7 @@
 import { Grid, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import HistoryItem from './HistoryItem';
+import { io } from 'socket.io-client';
 
 interface HistoryProps {
   gbpToUsd?: string;
@@ -13,10 +14,20 @@ interface HistoryProps {
 export default function History() {
   const [historyList, setHistoryList] = useState<HistoryProps[]>();
 
-  useEffect(() => {
-    const getStorage = localStorage.getItem('history') || '[]';
+  const socket = io('http://localhost:4000/');
 
-    setHistoryList(JSON.parse(getStorage));
+  const fetchTrades = async () => {
+    const request = await fetch('http://localhost:3333/trades');
+    const response = await request.json();
+    setHistoryList(response);
+  };
+
+  socket.on('newTrade', async () => {
+    fetchTrades();
+  });
+
+  useEffect(() => {
+    fetchTrades();
   }, []);
 
   if (!historyList) return <div>Carregando...</div>;
@@ -31,13 +42,14 @@ export default function History() {
             : `You have ${historyList.length} trades on your history`}
         </Typography>
 
-        {!!historyList && historyList.map((item: HistoryProps, index: number) => (
-          <HistoryItem
-            title={item.gbpToUsd ? 'GBP to USD' : 'USD to GBP'}
-            key={item.date}
-            {...item}
-          />
-        ))}
+        {!!historyList &&
+          historyList.map((item: HistoryProps) => (
+            <HistoryItem
+              title={item.gbpToUsd ? 'GBP to USD' : 'USD to GBP'}
+              key={item.date + String(item.exchangeAmount)}
+              {...item}
+            />
+          ))}
       </Stack>
     </Grid>
   );
