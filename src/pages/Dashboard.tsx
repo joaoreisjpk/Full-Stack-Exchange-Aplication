@@ -28,11 +28,13 @@ export default function Dashboard() {
       console.log(`Connected with ${socket.id}`);
     });
     const api = async () => {
-      setGbpExchange(await calculateCurrencyExchange('USD', 'GBP'));
-      setUsdExchange(await calculateCurrencyExchange('GBP', 'USD'));
+      const gbpCurrency = await calculateCurrencyExchange('USD', 'GBP');
+      const usdCurrency = await calculateCurrencyExchange('GBP', 'USD');
+      setGbpExchange(gbpCurrency);
+      setUsdExchange(usdCurrency)
     };
     api();
-  }, []);
+  }, [socket]);
 
   function submitHandler(inputsData: InputsDataProps, resetForm: () => void) {
     const { gbpToUsd, usdToGbp } = inputsData;

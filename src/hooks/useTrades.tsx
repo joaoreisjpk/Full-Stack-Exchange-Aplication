@@ -1,29 +1,30 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext } from "react";
 import { io, Socket } from 'socket.io-client';
 
 interface IContext {
-  trades: string[];
-  setTrades: (param: string[]) => void;
   socket: Socket
+}
+
+interface TradesProviderProps {
+  children: JSX.Element;
 }
 
 export const TradesContext = createContext({} as IContext);
 
-export function TradesProvider({children}) {
-  const [trades, setTrades] = useState([] as string[]);
-  const socket: Socket = io('http://localhost:4000/');
+export function TradesProvider({children}: TradesProviderProps) {
+  const socket: Socket = io('http://localhost:3333/');
 
-  useEffect(() => {
+/*   useEffect(() => {
     const getStorage = localStorage.getItem('trades') || '[]'
     setTrades(JSON.parse(getStorage));
   }, []);
 
   useEffect(() => {
     localStorage.setItem('trades', JSON.stringify(trades))
-  }, [trades]);
+  }, [trades]); */
 
   return (
-    <TradesContext.Provider value={{ trades, setTrades, socket }}>
+    <TradesContext.Provider value={{ socket }}>
       {children}
     </TradesContext.Provider>
   )

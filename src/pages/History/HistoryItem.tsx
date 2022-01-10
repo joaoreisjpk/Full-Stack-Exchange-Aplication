@@ -6,7 +6,7 @@ interface HistoryProps {
   currencyExchange: string;
   exchangeAmount: string;
   date: string;
-  id?: string;
+  id: string;
   handleDeleteTrade: (id: string) => void;
 }
 

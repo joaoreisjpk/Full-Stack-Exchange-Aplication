@@ -5,7 +5,7 @@ import { useTrades } from '../../hooks/useTrades';
 
 interface HistoryProps {
   gbpToUsd?: string;
-  _id?: string;
+  _id: string;
   usdToGbp?: string;
   currencyExchange: string;
   exchangeAmount: string;
@@ -13,7 +13,7 @@ interface HistoryProps {
 }
 
 export default function History() {
-  const [historyList, setHistoryList] = useState<HistoryProps[]>();
+  const [historyList, setHistoryList] = useState<HistoryProps[]>([]);
   const { socket } = useTrades();
 
   const fetchTrades = async () => {
@@ -22,11 +22,12 @@ export default function History() {
     setHistoryList(response);
   };
 
-  function handleDeleteTrade(id) {
+  function handleDeleteTrade(id: string) {
     const newHistoryList = historyList.filter((item) => item._id !== id);
     fetch(`http://localhost:3333/trades/${id}`, {
         method: 'DELETE',
       });
+    socket.emit('tradesUpdate');
     setHistoryList(newHistoryList);
   }
 
@@ -37,6 +38,7 @@ export default function History() {
         method: 'DELETE',
       });
     };
+    socket.emit('tradesUpdate');
   }
 
   useEffect(() => {
@@ -47,7 +49,7 @@ export default function History() {
     fetchTrades();
   }, [socket]);
 
-  if (!historyList) return <div>Carregando...</div>;
+  if (!historyList.length) return <div>Carregando...</div>;
 
   return (
     <Grid container direction='column'>
@@ -55,7 +57,7 @@ export default function History() {
         <Typography variant='h2'>Resume</Typography>
         <button onClick={handleWipeData} type="button">Wipe All Data</button>
         <Typography variant='h5'>
-          {!historyList?.length
+          {!historyList.length
             ? "You didn't made a trade yet"
             : `You have ${historyList.length} trades on your history`}
         </Typography>
