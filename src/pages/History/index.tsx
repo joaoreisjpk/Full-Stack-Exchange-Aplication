@@ -43,14 +43,13 @@ export default function History() {
 
   useEffect(() => {
     socket.on('newTrade', async () => {
-      console.log(socket.id);
       fetchTrades();
     });
     fetchTrades();
   }, [socket]);
 
-  if (!historyList.length) return <div>Carregando...</div>;
-
+/*   if (!historyList.length) return <div>Carregando...</div>;
+ */
   return (
     <Grid container direction='column'>
       <Stack gap={3} direction='column' margin='auto' padding={5}>

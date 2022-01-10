@@ -5,7 +5,6 @@ import { Button, Typography, Grid, Stack, Box } from '@mui/material';
 
 import SendIcon from '@mui/icons-material/Send';
 import MUInput from '../components/MUInput';
-import { calculateCurrencyExchange } from '../api/currencyAPI';
 import { validateInputs } from '../helpers';
 import { useNavigate } from 'react-router-dom';
 
@@ -27,13 +26,18 @@ export default function Dashboard() {
     socket.on('connect', () => {
       console.log(`Connected with ${socket.id}`);
     });
-    const api = async () => {
+    socket.on('updateCurrency', async ({gbpCurrency, usdCurrency}) => {
+      console.log('updatedCurrency')
+      setGbpExchange(gbpCurrency);
+      setUsdExchange(usdCurrency)
+    });
+    /* const api = async () => {
       const gbpCurrency = await calculateCurrencyExchange('USD', 'GBP');
       const usdCurrency = await calculateCurrencyExchange('GBP', 'USD');
       setGbpExchange(gbpCurrency);
       setUsdExchange(usdCurrency)
     };
-    api();
+    api(); */
   }, [socket]);
 
   function submitHandler(inputsData: InputsDataProps, resetForm: () => void) {
@@ -70,10 +74,10 @@ export default function Dashboard() {
         Currency Exchange
       </Typography>
       <Typography fontSize='.8rem' align='center'>
-        The currency exchange from USD to GBP is {Number(gbpExchange).toFixed(2)}
+        The currency exchange from USD to GBP is {Number(gbpExchange).toFixed(3)}
       </Typography>
       <Typography fontSize='.8rem' align='center'>
-        The currency exchange from GBP to USD is {Number(usdExchange).toFixed(2)}
+        The currency exchange from GBP to USD is {Number(usdExchange).toFixed(3)}
       </Typography>
       <Formik
         initialValues={{
