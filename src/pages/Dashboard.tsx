@@ -33,25 +33,36 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { socket } = useTrades();
 
+  const [currentIntraDayData, setCurrentIntraDayData] = useState({});
   const [currentExchange, setCurrentExchange] = useState<string>();
   const [currency, setCurrency] = useState({
-    baseCurrency: 'USD',
-    exchangeCurrency: 'GBP',
+    baseCurrency: 'GBP',
+    exchangeCurrency: 'USD',
   });
 
   useEffect(() => {
+    const { baseCurrency, exchangeCurrency } = currency;
+
     socket.on('connect', () => {
       console.log(`Connected with ${socket.id}`);
+    });
+  
+    socket.on('currencyRates', (data) => {
+      const key = `${baseCurrency}_${exchangeCurrency}_Currency`; // ex: GBP_USD_Currency, GBP_BRL_Currency:
+      setCurrentExchange(data[key]); //
+      console.log(data[key]);
+    });
+
+    socket.on('intraDayRates', (data) => {
+      const key = `${baseCurrency}_${exchangeCurrency}_intraday`; // ex: GBP_USD_Currency, GBP_BRL_Currency:
+      console.log(data[key])
+      console.log(Object.entries(data[key]['Time Series FX (60min)']))
+      setCurrentIntraDayData(data[key]);
     });
   }, [socket]);
 
   useEffect(() => {
-    const exchangeData = `${currency.baseCurrency}to${currency.exchangeCurrency}`;
-    socket.emit('dashboardConnection', currency);
-    socket.on(exchangeData, async (param) => {
-      console.log(param.usdCurrency || param.gbpCurrency);
-      setCurrentExchange(param.usdCurrency || param.gbpCurrency);
-    });
+    socket.emit('dashboardConnection');
   }, [socket, currency]);
 
   function submitHandler(inputsData: InputsDataProps, resetForm: () => void) {
@@ -72,9 +83,6 @@ export default function Dashboard() {
 
   function submitOptionsHandler(inputsData: GraphicDataProps) {
     const { baseCurrency, exchangeCurrency } = inputsData;
-    const exchangeData = `${currency.baseCurrency}to${currency.exchangeCurrency}`;
-
-    socket.off(exchangeData);
     setCurrency({ baseCurrency, exchangeCurrency });
   }
 
