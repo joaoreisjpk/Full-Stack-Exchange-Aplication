@@ -33,28 +33,26 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const { socket } = useTrades();
 
-  const [gbpExchange, setGbpExchange] = useState<string>();
+  const [currentExchange, setCurrentExchange] = useState<string>();
   const [currency, setCurrency] = useState({
-    baseCurrency: 'GBP',
-    exchangeCurrency: 'USD',
+    baseCurrency: 'USD',
+    exchangeCurrency: 'GBP',
   });
-  const [usdExchange, setUsdExchange] = useState<string>();
 
   useEffect(() => {
     socket.on('connect', () => {
       console.log(`Connected with ${socket.id}`);
     });
-    socket.on('updateCurrency', async ({ gbpCurrency, usdCurrency }) => {
-      console.log('updatedCurrency');
-      setGbpExchange(gbpCurrency);
-      setUsdExchange(usdCurrency);
-    });
   }, [socket]);
 
   useEffect(() => {
+    const exchangeData = `${currency.baseCurrency}to${currency.exchangeCurrency}`;
     socket.emit('dashboardConnection', currency);
+    socket.on(exchangeData, async (param) => {
+      console.log(param.usdCurrency || param.gbpCurrency);
+      setCurrentExchange(param.usdCurrency || param.gbpCurrency);
+    });
   }, [socket, currency]);
-
 
   function submitHandler(inputsData: InputsDataProps, resetForm: () => void) {
     const { baseMoney } = inputsData;
@@ -65,8 +63,8 @@ export default function Dashboard() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         baseMoney,
-        currencyExchange: usdExchange,
-        exchangeAmount: Number(baseMoney) * Number(usdExchange),
+        currencyExchange: currentExchange,
+        exchangeAmount: Number(baseMoney) * Number(currentExchange),
       }),
     });
     resetForm();
@@ -74,6 +72,9 @@ export default function Dashboard() {
 
   function submitOptionsHandler(inputsData: GraphicDataProps) {
     const { baseCurrency, exchangeCurrency } = inputsData;
+    const exchangeData = `${currency.baseCurrency}to${currency.exchangeCurrency}`;
+
+    socket.off(exchangeData);
     setCurrency({ baseCurrency, exchangeCurrency });
   }
 
@@ -83,8 +84,8 @@ export default function Dashboard() {
         Currency Exchange
       </Typography>
       <Typography fontSize='.8rem' align='center'>
-        The current exchange from {currency.baseCurrency} to {currency.exchangeCurrency} is{' '}
-        {Number(gbpExchange).toFixed(3)}
+        The current exchange from {currency.baseCurrency} to{' '}
+        {currency.exchangeCurrency} is {Number(currentExchange).toFixed(3)}
       </Typography>
       <Formik
         initialValues={{
