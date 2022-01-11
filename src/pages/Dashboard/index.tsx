@@ -33,19 +33,19 @@ export default function Dashboard() {
   useEffect(() => {
     const { baseCurrency, exchangeCurrency } = currency;
     socket.on('currencyRates', (data) => {
-      const key = `${baseCurrency}_${exchangeCurrency}_Currency`; // ex: GBP_USD_Currency, GBP_BRL_Currency:
+      const key = `${baseCurrency}_${exchangeCurrency}_Currency`; // ex: GBP_USD_Currency
       console.log(key, data);
       setCurrentCurrency(data[key]); //
     });
 
     socket.on('intraDayRates', (data) => {
-      const key = `${baseCurrency}_${exchangeCurrency}_intraday`; // ex: GBP_USD_Currency, GBP_BRL_Currency:
+      const key = `${baseCurrency}_${exchangeCurrency}_intraday`; // ex: GBP_USD_intraday,
       // console.log(Object.entries(data[key]['Time Series FX (60min)']))
       setCurrentIntraDayData(data[key]);
     });
   }, [socket, currency]);
 
-  function submitOptionsHandler(inputsData: GraphicDataProps) {
+  function submitHandler(inputsData: GraphicDataProps) {
     const { baseCurrency, exchangeCurrency } = inputsData;
     setCurrency({ baseCurrency, exchangeCurrency });
   }
@@ -53,7 +53,7 @@ export default function Dashboard() {
   return (
     <Box>
       <Header currency={{...currency, currentCurrency}} />
-        <SelectForms submitOptionsHandler={submitOptionsHandler}/>
+        <SelectForms submitHandler={submitHandler}/>
         <InputForms currency={{...currency, currentCurrency}} />
     </Box>
   );

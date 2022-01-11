@@ -16,10 +16,10 @@ interface GraphicDataProps {
 }
 
 interface ISelectForms {
-  submitOptionsHandler: (inputsData: GraphicDataProps) => void;
+  submitHandler: (inputsData: GraphicDataProps) => void;
 }
 
-export default function SelectForms({submitOptionsHandler}: ISelectForms) {
+export default function SelectForms({submitHandler}: ISelectForms) {
   return (
     <Formik
       initialValues={{
@@ -33,7 +33,7 @@ export default function SelectForms({submitOptionsHandler}: ISelectForms) {
         return {};
       }}
       onSubmit={async (inputsData: GraphicDataProps) =>
-        submitOptionsHandler(inputsData)
+        submitHandler(inputsData)
       }
     >
       <Form>
