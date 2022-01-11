@@ -1,6 +1,5 @@
 import { TextField } from '@mui/material';
 import { useField, FieldAttributes } from 'formik';
-import React from 'react';
 
 type MyRadioProps = { label: string } & FieldAttributes<{}>;
 
@@ -15,6 +14,7 @@ function MUInput({ label, ...props }: MyRadioProps) {
       color='secondary'
       margin='none'
       id={field.name}
+
       label={label}
       type={props.type}
       {...field}
