@@ -1,7 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 
-import { Button, Typography, Grid, Stack, Box } from '@mui/material';
+import {
+  Button,
+  Typography,
+  Grid,
+  Stack,
+  Box,
+  FormControl,
+  InputLabel,
+  MenuItem,
+} from '@mui/material';
 
 import SendIcon from '@mui/icons-material/Send';
 import MUInput from '../components/MUInput';
@@ -9,10 +18,15 @@ import { validateInputs } from '../helpers';
 import { useNavigate } from 'react-router-dom';
 
 import { useTrades } from '../hooks/useTrades';
+import MUISelect from '../components/MUISelect';
 
 interface InputsDataProps {
-  gbpToUsd: number | '';
-  usdToGbp: number | '';
+  baseMoney: number | '';
+}
+
+interface GraphicDataProps {
+  baseCurrency: string;
+  exchangeCurrency: string;
 }
 
 export default function Dashboard() {
@@ -20,52 +34,47 @@ export default function Dashboard() {
   const { socket } = useTrades();
 
   const [gbpExchange, setGbpExchange] = useState<string>();
+  const [currency, setCurrency] = useState({
+    baseCurrency: 'GBP',
+    exchangeCurrency: 'USD',
+  });
   const [usdExchange, setUsdExchange] = useState<string>();
-  
+
   useEffect(() => {
     socket.on('connect', () => {
       console.log(`Connected with ${socket.id}`);
     });
-    socket.on('updateCurrency', async ({gbpCurrency, usdCurrency}) => {
-      console.log('updatedCurrency')
+    socket.on('updateCurrency', async ({ gbpCurrency, usdCurrency }) => {
+      console.log('updatedCurrency');
       setGbpExchange(gbpCurrency);
-      setUsdExchange(usdCurrency)
+      setUsdExchange(usdCurrency);
     });
-    /* const api = async () => {
-      const gbpCurrency = await calculateCurrencyExchange('USD', 'GBP');
-      const usdCurrency = await calculateCurrencyExchange('GBP', 'USD');
-      setGbpExchange(gbpCurrency);
-      setUsdExchange(usdCurrency)
-    };
-    api(); */
   }, [socket]);
 
+  useEffect(() => {
+    socket.emit('dashboardConnection', currency);
+  }, [socket, currency]);
+
+
   function submitHandler(inputsData: InputsDataProps, resetForm: () => void) {
-    const { gbpToUsd, usdToGbp } = inputsData;
+    const { baseMoney } = inputsData;
     socket.emit('tradesUpdate');
 
-    if (!!gbpToUsd) {
-      fetch('http://localhost:3333/trades', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          gbpToUsd,
-          currencyExchange: usdExchange,
-          exchangeAmount: Number(gbpToUsd) * Number(usdExchange),
-        }),
-      });
-    } else {
-      fetch('http://localhost:3333/trades', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          usdToGbp,
-          currencyExchange: gbpExchange,
-          exchangeAmount: Number(usdToGbp) * Number(gbpExchange),
-        }),
-      });
-    }
+    fetch('http://localhost:3333/trades', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        baseMoney,
+        currencyExchange: usdExchange,
+        exchangeAmount: Number(baseMoney) * Number(usdExchange),
+      }),
+    });
     resetForm();
+  }
+
+  function submitOptionsHandler(inputsData: GraphicDataProps) {
+    const { baseCurrency, exchangeCurrency } = inputsData;
+    setCurrency({ baseCurrency, exchangeCurrency });
   }
 
   return (
@@ -74,18 +83,84 @@ export default function Dashboard() {
         Currency Exchange
       </Typography>
       <Typography fontSize='.8rem' align='center'>
-        The currency exchange from USD to GBP is {Number(gbpExchange).toFixed(3)}
-      </Typography>
-      <Typography fontSize='.8rem' align='center'>
-        The currency exchange from GBP to USD is {Number(usdExchange).toFixed(3)}
+        The current exchange from {currency.baseCurrency} to {currency.exchangeCurrency} is{' '}
+        {Number(gbpExchange).toFixed(3)}
       </Typography>
       <Formik
         initialValues={{
-          usdToGbp: '',
-          gbpToUsd: '',
+          baseCurrency: 'GBP',
+          exchangeCurrency: 'USD',
         }}
-        validate={({ gbpToUsd, usdToGbp }: InputsDataProps) =>
-          validateInputs({ gbpToUsd, usdToGbp })
+        validate={({ baseCurrency, exchangeCurrency }: GraphicDataProps) => {
+          if (baseCurrency === exchangeCurrency) {
+            return { baseCurrency: 'error', exchangeCurrency: 'error' };
+          }
+          return {};
+        }}
+        onSubmit={async (inputsData: GraphicDataProps) =>
+          submitOptionsHandler(inputsData)
+        }
+      >
+        <Form>
+          <Grid
+            container
+            marginTop='2.5rem'
+            gap={4}
+            justifyItems='center'
+            direction='column'
+            justifyContent='center'
+            alignItems='center'
+          >
+            <Stack spacing={2}>
+              <FormControl fullWidth>
+                <InputLabel>Base Currency</InputLabel>
+                <MUISelect name='baseCurrency'>
+                  <MenuItem value='GBP'>United Kingdom (GBP)</MenuItem>
+                  <MenuItem value='USD'>United States (USD)</MenuItem>
+                  <MenuItem value='JPY'>Japan (JPY)</MenuItem>
+                  <MenuItem value='BRL'>Brasil (BRL)</MenuItem>
+                  <MenuItem value='EUR'>Euro (EUR)</MenuItem>
+                  <MenuItem value='CNY'>China (CNY)</MenuItem>
+                  <MenuItem value='AUD'>Australia (AUD)</MenuItem>
+                  <MenuItem value='CAD'>Canada (CAD)</MenuItem>
+                  <MenuItem value='ARS'>Argentina (ARS)</MenuItem>
+                </MUISelect>
+              </FormControl>
+              <FormControl fullWidth>
+                <InputLabel>Exchange Currency</InputLabel>
+                <MUISelect name='exchangeCurrency'>
+                  <MenuItem value='USD'>United States (USD)</MenuItem>
+                  <MenuItem value='GBP'>United Kingdom (GBP)</MenuItem>
+                  <MenuItem value='JPY'>Japan (JPY)</MenuItem>
+                  <MenuItem value='BRL'>Brasil (BRL)</MenuItem>
+                  <MenuItem value='EUR'>Euro (EUR)</MenuItem>
+                  <MenuItem value='CNY'>China (CNY)</MenuItem>
+                  <MenuItem value='AUD'>Australia (AUD)</MenuItem>
+                  <MenuItem value='CAD'>Canada (CAD)</MenuItem>
+                  <MenuItem value='ARS'>Argentina (ARS)</MenuItem>
+                </MUISelect>
+              </FormControl>
+              <Button
+                endIcon={<SendIcon />}
+                type='submit'
+                size='large'
+                variant='contained'
+                sx={{
+                  width: 265,
+                }}
+              >
+                Update
+              </Button>
+            </Stack>
+          </Grid>
+        </Form>
+      </Formik>
+      <Formik
+        initialValues={{
+          baseMoney: '',
+        }}
+        validate={({ baseMoney }: InputsDataProps) =>
+          validateInputs({ baseMoney })
         }
         onSubmit={async (inputsData: InputsDataProps, { resetForm }) =>
           await submitHandler(inputsData, resetForm)
@@ -102,16 +177,14 @@ export default function Dashboard() {
             alignItems='center'
           >
             <Stack spacing={2}>
-              <Typography variant='h6' component='label' htmlFor='usdToGbp'>
-                Exchange USD to GBP
+              <Typography variant='h6' component='label' htmlFor='baseMoney'>
+                Exchange {currency.baseCurrency} to {currency.exchangeCurrency}
               </Typography>
-              <MUInput name='usdToGbp' type='input' label='US$' />
-            </Stack>
-            <Stack spacing={2}>
-              <Typography variant='h6' component='label' htmlFor='gbpToUsd'>
-                Exchange GBP to USD
-              </Typography>
-              <MUInput type='input' name='gbpToUsd' label='GBP$' />{' '}
+              <MUInput
+                type='input'
+                name='baseMoney'
+                label={`${currency.exchangeCurrency} $`}
+              />{' '}
               <Button
                 endIcon={<SendIcon />}
                 type='submit'
