@@ -7,6 +7,7 @@ import { useTrades } from '../../hooks/useTrades';
 import SelectForms from './SelectForms';
 import Header from './Header';
 import InputForms from './InputForms';
+import Chart from './Chart';
 
 interface GraphicDataProps {
   baseCurrency: string;
@@ -53,6 +54,7 @@ export default function Dashboard() {
   return (
     <Box>
       <Header currency={{...currency, currentCurrency}} />
+        <Chart />
         <SelectForms submitHandler={submitHandler}/>
         <InputForms currency={{...currency, currentCurrency}} />
     </Box>
