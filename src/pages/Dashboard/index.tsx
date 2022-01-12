@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import {
-  Box,
-} from '@mui/material';
+import { Box, Stack, Typography } from '@mui/material';
 
 import { useTrades } from '../../hooks/useTrades';
 import SelectForms from './SelectForms';
@@ -19,13 +17,14 @@ export default function Dashboard() {
 
   const [currentIntraDayData, setCurrentIntraDayData] = useState({} as any);
   const [currentCurrencyData, setCurrentCurrencyData] = useState({} as any);
-  const [currentIntraDay, setCurrentIntraDay] = useState([] as string[][]); 
-  const [currentCurrency, setCurrentCurrency] = useState<string>();
-
+  const [currentIntraDay, setCurrentIntraDay] = useState([] as string[][]);
+  const [currentCurrencyValue, setCurrentCurrencyValue] = useState<string>();
   const [currency, setCurrency] = useState({
     baseCurrency: 'GBP',
     exchangeCurrency: 'USD',
   });
+
+  const { baseCurrency, exchangeCurrency } = currency;
 
   useEffect(() => {
     socket.on('connect', () => {
@@ -35,22 +34,18 @@ export default function Dashboard() {
     socket.on('currencyRates', (data) => {
       setCurrentCurrencyData(data); //
     });
-    
+
     socket.on('intraDayRates', (data) => {
       setCurrentIntraDayData(data);
     });
   }, [socket]);
-  
+
   useEffect(() => {
-    const { baseCurrency, exchangeCurrency } = currency;
     const currencyKey = `${baseCurrency}_${exchangeCurrency}_Currency`; // ex: GBP_USD_Currency
     const intradayKey = `${baseCurrency}_${exchangeCurrency}_intraday`; // ex: GBP_USD_intraday,
-    console.log('intraday: ',currentIntraDayData[currencyKey])
-    console.log('currency: ', currentCurrencyData[currencyKey])
-    setCurrentCurrency(currentCurrencyData[currencyKey]);
+    setCurrentCurrencyValue(currentCurrencyData[currencyKey]);
     setCurrentIntraDay(currentIntraDayData[intradayKey]);
-
-  }, [currency, currentCurrencyData, currentIntraDayData]);
+  }, [baseCurrency, currency, currentCurrencyData, currentIntraDayData, exchangeCurrency]);
 
   function submitHandler(inputsData: GraphicDataProps) {
     const { baseCurrency, exchangeCurrency } = inputsData;
@@ -58,11 +53,43 @@ export default function Dashboard() {
   }
 
   return (
-    <Box>
-      <Header currency={{...currency, currentCurrency}} />
+    <Stack
+      justifyItems='center'
+      direction='column'
+      justifyContent='center'
+      alignItems='center'
+      margin='auto'
+      padding='0 2rem'
+      maxWidth={1200}
+      className='maindiv'
+    >
+      <Header currency={{ ...currency, currentCurrencyValue }} />
+      <Stack
+        direction='row'
+        alignItems='center'
+        justifyContent='space-evenly'
+        width='100%'
+        marginTop={8}
+      >
+        <Box>
+          <Typography variant='h5' textAlign='center'>
+            Select your currency:
+          </Typography>
+          <SelectForms submitHandler={submitHandler} />
+        </Box>
+        <Box>
+          <Typography variant='h5' textAlign='center'>
+            Exchange your money:
+          </Typography>
+          <InputForms currency={{ ...currency, currentCurrencyValue }} />
+        </Box>
+      </Stack>
+      <Box width='80%' mt='3rem' alignContent={'center'}>
+        <Typography variant='h5' textAlign='center'>
+          Exchange chart {baseCurrency} to {exchangeCurrency}
+        </Typography>
         <Chart currentIntraDay={currentIntraDay} />
-        <SelectForms submitHandler={submitHandler}/>
-        <InputForms currency={{...currency, currentCurrency}} />
-    </Box>
+      </Box>
+    </Stack>
   );
 }
