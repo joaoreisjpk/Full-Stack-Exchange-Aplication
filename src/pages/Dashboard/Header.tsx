@@ -4,20 +4,20 @@ interface ICurrencyProps {
   currency: {
     baseCurrency: string;
     exchangeCurrency: string;
-    currentCurrency: string | undefined;
+    currentCurrencyValue: string | undefined;
   };
 }
 
 export default function Header({currency }: ICurrencyProps) {
-  const { baseCurrency, exchangeCurrency, currentCurrency } = currency;
+  const { baseCurrency, exchangeCurrency, currentCurrencyValue } = currency;
   return (
     <>
-      <Typography fontSize='1.8rem' align='center' marginTop={5}>
+      <Typography fontSize='2rem' align='center' marginTop={5}>
         Currency Exchange
       </Typography>
-      <Typography fontSize='.8rem' align='center'>
+      <Typography fontSize='1rem' align='center'>
         The current exchange from {baseCurrency} to{' '}
-        {exchangeCurrency} is {Number(currentCurrency).toFixed(3)}
+        {exchangeCurrency} is {Number(currentCurrencyValue).toFixed(3)}
       </Typography>
     </>
   )

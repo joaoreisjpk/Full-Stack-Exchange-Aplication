@@ -6,15 +6,8 @@ interface ChartProps {
 }
 
 export default function DashboardChart({ currentIntraDay }: ChartProps) {
-  console.log(currentIntraDay)
   if (!currentIntraDay) return <div>carregando...</div>;
   if (!currentIntraDay[0]) return <div>carregando...</div>;
-  console.log(currentIntraDay);
-  console.log(currentIntraDay[0][0]);
-  console.log(currentIntraDay[1][0]);
-  console.log(currentIntraDay[2][0]);
-  console.log(currentIntraDay[3][0]);
-  console.log(currentIntraDay[4][0]);
   const options: ApexOptions = {
     chart: {
       toolbar: {
@@ -23,7 +16,7 @@ export default function DashboardChart({ currentIntraDay }: ChartProps) {
       zoom: {
         enabled: false,
       },
-      foreColor: ' #444',
+      foreColor: 'gray',
     },
     grid: {
       show: true,
@@ -32,15 +25,15 @@ export default function DashboardChart({ currentIntraDay }: ChartProps) {
       enabled: true,
     },
     tooltip: {
-      enabled: true,
+      enabled: false,
     },
     xaxis: {
       type: 'datetime',
       axisBorder: {
-        color: 'black',
+        color: 'gray',
       },
       axisTicks: {
-        color: '#ffffff',
+        color: 'gray',
       },
       categories: [
         currentIntraDay[7][0],
@@ -84,8 +77,8 @@ export default function DashboardChart({ currentIntraDay }: ChartProps) {
       options={options}
       series={series}
       type='area'
-      height={400}
-      width={900}
+      height='400px'
+      width='100%'
     />
-  );
+  )
 }

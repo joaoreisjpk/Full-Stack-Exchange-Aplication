@@ -52,7 +52,7 @@ export default function SelectForms({submitHandler}: ISelectForms) {
               <MUISelect name='baseCurrency'>
                 <MenuItem value='GBP'>United Kingdom (GBP)</MenuItem>
                 <MenuItem value='USD'>United States (USD)</MenuItem>
-                <MenuItem value='BRL'>Brasil (BRL)</MenuItem>
+                <MenuItem value='BRL'>Brazil (BRL)</MenuItem>
            </MUISelect>
             </FormControl>
             <FormControl fullWidth>
@@ -60,7 +60,7 @@ export default function SelectForms({submitHandler}: ISelectForms) {
               <MUISelect name='exchangeCurrency'>
                 <MenuItem value='USD'>United States (USD)</MenuItem>
                 <MenuItem value='GBP'>United Kingdom (GBP)</MenuItem>
-                <MenuItem value='BRL'>Brasil (BRL)</MenuItem>
+                <MenuItem value='BRL'>Brazil (BRL)</MenuItem>
               </MUISelect>
             </FormControl>
             <Button
