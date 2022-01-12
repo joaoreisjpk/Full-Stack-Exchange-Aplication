@@ -17,34 +17,40 @@ interface GraphicDataProps {
 export default function Dashboard() {
   const { socket } = useTrades();
 
-  const [currentIntraDayData, setCurrentIntraDayData] = useState({});
+  const [currentIntraDayData, setCurrentIntraDayData] = useState({} as any);
+  const [currentCurrencyData, setCurrentCurrencyData] = useState({} as any);
+  const [currentIntraDay, setCurrentIntraDay] = useState([] as string[][]); 
   const [currentCurrency, setCurrentCurrency] = useState<string>();
+
   const [currency, setCurrency] = useState({
     baseCurrency: 'GBP',
     exchangeCurrency: 'USD',
   });
 
   useEffect(() => {
-    socket.emit('dashboardConnection');
     socket.on('connect', () => {
       console.log(`Connected with ${socket.id}`);
     });
+    socket.emit('dashboardConnection');
+    socket.on('currencyRates', (data) => {
+      setCurrentCurrencyData(data); //
+    });
+    
+    socket.on('intraDayRates', (data) => {
+      setCurrentIntraDayData(data);
+    });
   }, [socket]);
-
+  
   useEffect(() => {
     const { baseCurrency, exchangeCurrency } = currency;
-    socket.on('currencyRates', (data) => {
-      const key = `${baseCurrency}_${exchangeCurrency}_Currency`; // ex: GBP_USD_Currency
-      console.log(key, data);
-      setCurrentCurrency(data[key]); //
-    });
+    const currencyKey = `${baseCurrency}_${exchangeCurrency}_Currency`; // ex: GBP_USD_Currency
+    const intradayKey = `${baseCurrency}_${exchangeCurrency}_intraday`; // ex: GBP_USD_intraday,
+    console.log('intraday: ',currentIntraDayData[currencyKey])
+    console.log('currency: ', currentCurrencyData[currencyKey])
+    setCurrentCurrency(currentCurrencyData[currencyKey]);
+    setCurrentIntraDay(currentIntraDayData[intradayKey]);
 
-    socket.on('intraDayRates', (data) => {
-      const key = `${baseCurrency}_${exchangeCurrency}_intraday`; // ex: GBP_USD_intraday,
-      // console.log(Object.entries(data[key]['Time Series FX (60min)']))
-      setCurrentIntraDayData(data[key]);
-    });
-  }, [socket, currency]);
+  }, [currency, currentCurrencyData, currentIntraDayData]);
 
   function submitHandler(inputsData: GraphicDataProps) {
     const { baseCurrency, exchangeCurrency } = inputsData;
@@ -54,7 +60,7 @@ export default function Dashboard() {
   return (
     <Box>
       <Header currency={{...currency, currentCurrency}} />
-        <Chart />
+        <Chart currentIntraDay={currentIntraDay} />
         <SelectForms submitHandler={submitHandler}/>
         <InputForms currency={{...currency, currentCurrency}} />
     </Box>

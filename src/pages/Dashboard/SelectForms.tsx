@@ -52,7 +52,8 @@ export default function SelectForms({submitHandler}: ISelectForms) {
               <MUISelect name='baseCurrency'>
                 <MenuItem value='GBP'>United Kingdom (GBP)</MenuItem>
                 <MenuItem value='USD'>United States (USD)</MenuItem>
-              </MUISelect>
+                <MenuItem value='BRL'>Brasil (BRL)</MenuItem>
+           </MUISelect>
             </FormControl>
             <FormControl fullWidth>
               <InputLabel>Exchange Currency</InputLabel>
