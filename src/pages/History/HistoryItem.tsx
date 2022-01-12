@@ -1,49 +1,83 @@
-import { Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from '@mui/material';
 
 interface HistoryProps {
-  gbpToUsd?: string;
-  usdToGbp?: string;
-  currencyExchange: string;
-  exchangeAmount: string;
-  date: string;
-  id: string;
+  data: {
+    baseCurrency: string;
+    exchangeCurrency: string;
+    moneyAmount: number;
+    currentCurrencyValue: number;
+    exchangeAmount: number;
+    date: Date;
+    _id: string;
+  };
   handleDeleteTrade: (id: string) => void;
 }
 
-interface ItemProps extends HistoryProps {
-  title: string;
-}
+export default function HistoryItem({ data, handleDeleteTrade }: HistoryProps) {
+  const {
+    _id,
+    baseCurrency,
+    currentCurrencyValue,
+    date,
+    exchangeAmount,
+    exchangeCurrency,
+    moneyAmount,
+  } = data;
 
-export default function HistoryItem({
-  title,
-  date,
-  gbpToUsd,
-  exchangeAmount,
-  currencyExchange,
-  usdToGbp,
-  id,
-  handleDeleteTrade,
-}: ItemProps) {
+  const options: any = {
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    timeZone: 'GMT',
+    year: 'numeric',
+    month: 'numeric',
+    day: 'numeric',
+  };
   return (
-    <section id={id}>
+    <Box
+      id={_id}
+      border='2px solid black'
+      padding='2rem'
+      gap='1rem'
+      flexDirection='column'
+      display='flex'
+    >
       <Typography variant='h5'>
-        The currency exchange was: {title}
+        Exchange Type: {baseCurrency} to {exchangeCurrency}
       </Typography>
       <Typography variant='h5'>
-        White a Rate of {Number(currencyExchange).toFixed(2)}
+        Exchange Rate: {Number(currentCurrencyValue).toFixed(2)}
       </Typography>
       <Typography variant='h5'>
-        On {date}
+        Base amount:{' '}
+        {new Intl.NumberFormat('en-GB', {
+          style: 'currency',
+          currency: baseCurrency,
+        }).format(moneyAmount)}
       </Typography>
       <Typography variant='h5'>
-        With an amount of {Number(gbpToUsd || usdToGbp).toFixed(2)}
+        Exchanged Amount{' '}
+        {new Intl.NumberFormat('en-GB', {
+          style: 'currency',
+          currency: exchangeCurrency,
+        }).format(exchangeAmount)}
       </Typography>
-      <Typography variant='h5'>
-        Witch turned into {Number(exchangeAmount).toFixed(2)}
-      </Typography>
-      <button type="button" onClick={() => handleDeleteTrade(id)}>
-        Delete from History
-      </button>
-    </section>
+      <Stack direction='row' justifyContent='space-between'>
+        <Button
+          onClick={() => handleDeleteTrade(_id)}
+          size='small'
+          variant='contained'
+          sx={{
+            backgroundColor: '#e66d6d',
+            fontWeight: 400,
+          }}
+        >
+          Delete item
+        </Button>
+        <Typography variant='h6' textAlign='end'>
+          {new Intl.DateTimeFormat('en-GB', options).format(new Date(date))}
+        </Typography>
+      </Stack>
+    </Box>
   );
 }

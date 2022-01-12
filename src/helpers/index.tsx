@@ -1,17 +1,17 @@
 interface validateInputProps {
-  baseMoney: number | '';
+  moneyAmount: number | '';
 }
 
 export const validateInputs = ({
-  baseMoney = 0,
+  moneyAmount = 0,
 }: validateInputProps) => {
-  if (baseMoney === '' && baseMoney === '') {
+  if (moneyAmount === '' && moneyAmount === '') {
     return {
-      baseMoney: 'Please fill one of inputs',
+      moneyAmount: 'Please fill one of inputs',
     };
-  }  else if (baseMoney < 0) {
+  }  else if (moneyAmount < 0) {
     return {
-      baseMoney: 'Please, put a number bigger then 0',
+      moneyAmount: 'Please, put a number bigger then 0',
     };
   }
   return {};
