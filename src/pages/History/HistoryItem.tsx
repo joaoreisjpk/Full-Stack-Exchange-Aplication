@@ -42,8 +42,8 @@ export default function HistoryItem({ data, handleDeleteTrade }: HistoryProps) {
       flexDirection='column'
       display='flex'
     >
-      <Typography variant='h5'>
-        Exchange Type: {baseCurrency} to {exchangeCurrency}
+      <Typography variant='h5' textAlign='center'>
+        {baseCurrency} to {exchangeCurrency}
       </Typography>
       <Typography variant='h5'>
         Exchange Rate: {Number(currentCurrencyValue).toFixed(2)}

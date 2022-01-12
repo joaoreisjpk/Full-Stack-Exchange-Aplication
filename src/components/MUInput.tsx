@@ -14,7 +14,6 @@ function MUInput({ label, ...props }: MyRadioProps) {
       color='secondary'
       margin='none'
       id={field.name}
-
       label={label}
       type={props.type}
       {...field}

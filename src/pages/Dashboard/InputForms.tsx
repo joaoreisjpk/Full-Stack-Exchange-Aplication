@@ -81,7 +81,7 @@ export default function InputForms({ currency }: ICurrencyProps) {
               {baseCurrency} to {exchangeCurrency}
             </Typography>
             <MUInput
-              type='input'
+              type='number'
               name='moneyAmount'
               label={`${exchangeCurrency} $`}
             />{' '}

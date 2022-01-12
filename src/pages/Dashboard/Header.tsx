@@ -15,7 +15,7 @@ export default function Header({currency }: ICurrencyProps) {
       <Typography fontSize='2rem' align='center' marginTop={5}>
         Currency Exchange
       </Typography>
-      <Typography fontSize='1rem' align='center'>
+      <Typography fontSize='1.2rem' align='center'>
         The current exchange from {baseCurrency} to{' '}
         {exchangeCurrency} is {Number(currentCurrencyValue).toFixed(3)}
       </Typography>
