@@ -1,9 +1,9 @@
 import { Select } from '@mui/material';
 import { useField, FieldAttributes } from 'formik';
 
-type MyRadioProps = { children: JSX.Element[] } & FieldAttributes<{}>;
+type MyRadioProps = { children: JSX.Element[], label: string } & FieldAttributes<{}>;
 
-function MUISelect({ children, ...props }: MyRadioProps) {
+function MUISelect({ children, label, ...props }: MyRadioProps) {
   const [field, meta] = useField<{}>(props);
   const errorText = meta.error && meta.touched ? meta.error : '';
   return (
@@ -13,8 +13,10 @@ function MUISelect({ children, ...props }: MyRadioProps) {
         variant='outlined'
         color='secondary'
         margin='none'
+        labelId={props.name}
         type={props.type}
         {...field}
+        label={label}
         sx={{
           width: 265,
         }}

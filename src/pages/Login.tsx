@@ -65,7 +65,7 @@ export default function Home() {
                     width: 265,
                   }}
                 >
-                  Enviar
+                  Login
                 </Button>
               </Stack>
             </Grid>

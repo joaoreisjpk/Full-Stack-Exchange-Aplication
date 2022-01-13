@@ -48,16 +48,16 @@ export default function SelectForms({submitHandler}: ISelectForms) {
         >
           <Stack spacing={2}>
             <FormControl fullWidth>
-              <InputLabel>Base Currency</InputLabel>
-              <MUISelect name='baseCurrency'>
+              <InputLabel id='baseCurrency'>Base Currency</InputLabel>
+              <MUISelect name='baseCurrency' label='exchangeCurrency'>
                 <MenuItem value='GBP'>United Kingdom (GBP)</MenuItem>
                 <MenuItem value='USD'>United States (USD)</MenuItem>
                 <MenuItem value='BRL'>Brazil (BRL)</MenuItem>
            </MUISelect>
             </FormControl>
             <FormControl fullWidth>
-              <InputLabel>Exchange Currency</InputLabel>
-              <MUISelect name='exchangeCurrency'>
+              <InputLabel id='exchangeCurrency'>Exchange Currency</InputLabel>
+              <MUISelect name='exchangeCurrency' label='exchangeCurrency'>
                 <MenuItem value='USD'>United States (USD)</MenuItem>
                 <MenuItem value='GBP'>United Kingdom (GBP)</MenuItem>
                 <MenuItem value='BRL'>Brazil (BRL)</MenuItem>

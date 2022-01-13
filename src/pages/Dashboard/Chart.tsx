@@ -6,8 +6,8 @@ interface ChartProps {
 }
 
 export default function DashboardChart({ currentIntraDay }: ChartProps) {
-  if (!currentIntraDay) return <div>carregando...</div>;
-  if (!currentIntraDay[0]) return <div>carregando...</div>;
+  if (!currentIntraDay) return <div>Loading...</div>;
+  if (!currentIntraDay[0]) return <div>Loading...</div>;
   const options: ApexOptions = {
     chart: {
       toolbar: {
