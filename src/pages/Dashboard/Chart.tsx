@@ -1,13 +1,20 @@
 import { ApexOptions } from 'apexcharts';
 import Chart from 'react-apexcharts';
+import CircularProgress from '@mui/material/CircularProgress';
+import { Box } from '@mui/system';
+import { LinearProgress } from '@mui/material';
 
 interface ChartProps {
   currentIntraDay: string[][];
 }
 
 export default function DashboardChart({ currentIntraDay }: ChartProps) {
-  if (!currentIntraDay) return <div>Loading...</div>;
-  if (!currentIntraDay[0]) return <div>Loading...</div>;
+  if (!currentIntraDay || !currentIntraDay[0])
+    return (
+      <Box sx={{ width: '100%', marginTop: '4rem' }}>
+        <LinearProgress />
+      </Box>
+    );
   const options: ApexOptions = {
     chart: {
       toolbar: {
@@ -80,5 +87,5 @@ export default function DashboardChart({ currentIntraDay }: ChartProps) {
       height='400px'
       width='100%'
     />
-  )
+  );
 }

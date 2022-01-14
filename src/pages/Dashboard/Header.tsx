@@ -1,4 +1,5 @@
-import { Typography } from '@mui/material'
+import { Typography } from '@mui/material';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface ICurrencyProps {
   currency: {
@@ -8,7 +9,7 @@ interface ICurrencyProps {
   };
 }
 
-export default function Header({currency }: ICurrencyProps) {
+export default function Header({ currency }: ICurrencyProps) {
   const { baseCurrency, exchangeCurrency, currentCurrencyValue } = currency;
   return (
     <>
@@ -16,9 +17,23 @@ export default function Header({currency }: ICurrencyProps) {
         Currency Exchange
       </Typography>
       <Typography fontSize='1.2rem' align='center'>
-        The current exchange from {baseCurrency} to{' '}
-        {exchangeCurrency} is {Number(currentCurrencyValue).toFixed(3)}
+        The current exchange from {baseCurrency} to {exchangeCurrency} is{' '}
+        {currentCurrencyValue ? (
+          Number(currentCurrencyValue).toFixed(3)
+        ) : (
+          <CircularProgress
+            color='secondary'
+            size={24}
+            sx={{
+              position:'absolute',
+              height: '20px',
+              width:'20px',
+              color: 'green',
+              marginLeft:'1rem'
+            }}
+          />
+        )}
       </Typography>
     </>
-  )
+  );
 }

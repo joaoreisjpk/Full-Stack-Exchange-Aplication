@@ -5,6 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { useNavigate } from 'react-router-dom';
 import { validateInputs } from '../../helpers';
 import { useTrades } from '../../hooks/useTrades';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface ICurrencyProps {
   currency: {
@@ -24,18 +25,14 @@ export default function InputForms({ currency }: ICurrencyProps) {
 
   const { baseCurrency, currentCurrencyValue, exchangeCurrency } = currency;
 
-  function submitHandler(inputsData: InputsDataProps, resetForm: () => void) {
+  async function submitHandler(
+    inputsData: InputsDataProps,
+    resetForm: () => void
+  ) {
     const { moneyAmount } = inputsData;
-    console.log({
-      baseCurrency: baseCurrency,
-      exchangeCurrency: exchangeCurrency,
-      moneyAmount: Number(moneyAmount),
-      currentCurrencyValue: Number(currentCurrencyValue),
-      exchangeAmount: Number(moneyAmount) * Number(currentCurrencyValue),
-    })
     socket.emit('tradesUpdate');
-
-    fetch('http://localhost:3333/trades', {
+    
+    await fetch('http://localhost:3333/trades', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -46,6 +43,7 @@ export default function InputForms({ currency }: ICurrencyProps) {
         exchangeAmount: Number(moneyAmount) * Number(currentCurrencyValue),
       }),
     });
+
     resetForm();
   }
 
@@ -57,59 +55,83 @@ export default function InputForms({ currency }: ICurrencyProps) {
       validate={({ moneyAmount }: InputsDataProps) =>
         validateInputs({ moneyAmount })
       }
-      onSubmit={async (inputsData: InputsDataProps, { resetForm }) =>
-        await submitHandler(inputsData, resetForm)
-      }
+      onSubmit={async (
+        inputsData: InputsDataProps,
+        { resetForm, setSubmitting }
+      ) => {
+        setSubmitting(true);
+        await submitHandler(inputsData, resetForm);
+        /* setSubmitting(false); */
+      }}
     >
-      <Form>
-        <Grid
-          container
-          marginTop='.5rem'
-          gap={4}
-          justifyItems='center'
-          direction='column'
-          justifyContent='center'
-          alignItems='center'
-        >
-          <Stack spacing={2}>
-            <Typography
-              fontSize='1rem'
-              textAlign='center'
-              component='label'
-              htmlFor='moneyAmount'
+      {({ isSubmitting }) => {
+        return (
+          <Form>
+            <Grid
+              container
+              marginTop='.5rem'
+              gap={4}
+              justifyItems='center'
+              direction='column'
+              justifyContent='center'
+              alignItems='center'
             >
-              {baseCurrency} to {exchangeCurrency}
-            </Typography>
-            <MUInput
-              type='number'
-              name='moneyAmount'
-              label={`${exchangeCurrency} $`}
-            />{' '}
-            <Button
-              endIcon={<SendIcon />}
-              type='submit'
-              size='large'
-              variant='contained'
-              sx={{
-                width: 265,
-              }}
-            >
-              Enviar
-            </Button>
-            <Button
-              endIcon={<SendIcon />}
-              onClick={() => navigate('/history')}
-              size='large'
-              variant='contained'
-              sx={{
-                width: 265,
-              }}
-            >
-              History
-            </Button>
-          </Stack>
-        </Grid>
-      </Form>
+              <Stack spacing={2}>
+                <Typography
+                  fontSize='1rem'
+                  textAlign='center'
+                  component='label'
+                  htmlFor='moneyAmount'
+                >
+                  {baseCurrency} to {exchangeCurrency}
+                </Typography>
+                <MUInput
+                  type='number'
+                  name='moneyAmount'
+                  label={`${exchangeCurrency} $`}
+                />{' '}
+                <Button
+                  endIcon={isSubmitting ? null : <SendIcon />}
+                  disabled={isSubmitting}
+                  type='submit'
+                  size='large'
+                  variant='contained'
+                  sx={{
+                    width: 265,
+                  }}
+                >
+                  {isSubmitting && (
+                    <CircularProgress
+                      color='secondary'
+                      size={24}
+                      sx={{
+                        color: 'green',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        marginTop: '-12px',
+                        marginLeft: '-12px',
+                      }}
+                    />
+                  )}
+                  Send
+                </Button>
+                <Button
+                  endIcon={<SendIcon />}
+                  onClick={() => navigate('/history')}
+                  size='large'
+                  variant='contained'
+                  sx={{
+                    width: 265,
+                  }}
+                >
+                  History
+                </Button>
+              </Stack>
+            </Grid>
+          </Form>
+        );
+      }}
     </Formik>
   );
 }

@@ -6,9 +6,9 @@ import {
 } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import Dashboard from '../pages/Dashboard';
+import Dashboard from '../../pages/Dashboard';
 import userEvent from '@testing-library/user-event';
-import { TradesProvider } from '../hooks/useTrades';
+import { TradesProvider } from '../../hooks/useTrades';
 import { createServer, Server } from 'http';
 
 const updateButton = async () =>
@@ -41,6 +41,8 @@ const getTextBox = () =>
   });
 
 describe('testing SelectForms from DashBoardPage', () => {
+  let hasConnected = false;
+
   /* Create server */
   const httpServer = createServer();
   const sampleMessage = 'Hello world!';
@@ -49,7 +51,9 @@ describe('testing SelectForms from DashBoardPage', () => {
   beforeAll((done) => {
       httpServer.listen('3333', () => {
           console.log('listening on 3333');
-          io.on('connection', (socket) => { 
+          io.on('connection', (socket) => {
+              hasConnected = true;
+  
               socket.emit('message', sampleMessage);
   
               socket.on('message', (message) => {
@@ -75,7 +79,7 @@ describe('testing SelectForms from DashBoardPage', () => {
     screen.getByText(/Loading/i);
   });
 
-  test('2- Checking the default values change accordinaly to SelectoForms changes', async () => {
+  test('2- Checking the default values change accordinaly', async () => {
     const history = createMemoryHistory();
     render(
       <BrowserRouter history={history}>
@@ -105,7 +109,8 @@ describe('testing SelectForms from DashBoardPage', () => {
     expect(BRltoGBP.length).toBe(3);
     await screen.findByText(/The current exchange from BRL to GBP is/i);
   });
-  test('3- Checking if the SelectForms validation works properly', async () => {
+
+  test('3- Checking if the validation works properly', async () => {
     const history = createMemoryHistory();
     render(
       <BrowserRouter history={history}>
@@ -125,8 +130,7 @@ describe('testing SelectForms from DashBoardPage', () => {
     const USDtoUSD = screen.queryAllByText(/USD to USD/i);
     expect(USDtoUSD.length).toBe(0);
   });
-
-  test('4- Checking the InputForms default values', async () => {
+  test('4- Checking the default values', async () => {
     const history = createMemoryHistory();
     render(
       <BrowserRouter history={history}>
@@ -136,12 +140,12 @@ describe('testing SelectForms from DashBoardPage', () => {
       </BrowserRouter>
     );
 
-    // cheking if the box and buttons exists
+    // updating the baseCurrency to BRL
     getTextBox();
     await sendButton();
     await historyButton();
   });
-  test('5- Checking the InputForms validation', async () => {
+  test('5- Checking the input validation', async () => {
     const history = createMemoryHistory();
     render(
       <BrowserRouter history={history}>

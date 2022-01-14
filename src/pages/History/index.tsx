@@ -2,6 +2,8 @@ import { Button, Grid, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import HistoryItem from './HistoryItem';
 import { useTrades } from '../../hooks/useTrades';
+import { Box } from '@mui/system';
+import { LinearProgress } from '@mui/material';
 
 interface HistoryProps {
   baseCurrency: string;
@@ -15,12 +17,14 @@ interface HistoryProps {
 
 export default function History() {
   const [historyList, setHistoryList] = useState<HistoryProps[]>([]);
+  const [loading, setLoading] = useState(true);
   const { socket } = useTrades();
 
   const fetchTrades = async () => {
     const request = await fetch('http://localhost:3333/trades');
     const response = await request.json();
     setHistoryList(response);
+    setLoading(false);
   };
 
   function handleDeleteTrade(id: string) {
@@ -71,14 +75,19 @@ export default function History() {
           Delete all history
         </Button>
 
-        {!!historyList &&
+        {loading ? (
+          <Box sx={{ width: '100%', marginTop: '4rem', color: '#e66d6d' }}>
+            <LinearProgress color="inherit" />
+          </Box>
+        ) : (
           historyList.map((item: HistoryProps) => (
             <HistoryItem
               data={item}
               key={item._id}
               handleDeleteTrade={handleDeleteTrade}
             />
-          ))}
+          ))
+        )}
       </Stack>
     </Grid>
   );
