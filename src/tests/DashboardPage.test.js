@@ -42,24 +42,6 @@ const getTextBox = () =>
 
 describe('testing SelectForms from DashBoardPage', () => {
   /* Create server */
-  const httpServer = createServer();
-  const sampleMessage = 'Hello world!';
-  const io = new Server(httpServer);
-  
-  beforeAll((done) => {
-      httpServer.listen('3333', () => {
-          console.log('listening on 3333');
-          io.on('connection', (socket) => { 
-              socket.emit('message', sampleMessage);
-  
-              socket.on('message', (message) => {
-                console.log(message)
-              });
-          });
-      });
-      done()
-  });
-
   test('1- Checking the default values on Dashboard', async () => {
     const history = createMemoryHistory();
     render(
@@ -72,7 +54,6 @@ describe('testing SelectForms from DashBoardPage', () => {
 
     await screen.findByText(/The current exchange from GBP to USD is/i);
     expect(screen.getAllByText(/GBP to USD/i).length).toBe(3);
-    screen.getByText(/Loading/i);
   });
 
   test('2- Checking the default values change accordinaly to SelectoForms changes', async () => {
