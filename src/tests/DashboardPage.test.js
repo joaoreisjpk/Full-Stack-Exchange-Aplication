@@ -38,6 +38,9 @@ const getTextBox = () =>
 
 describe('testing SelectForms from DashBoardPage', () => {
   /* Create server */
+  const httpServer = createServer();
+  const io = new Server(httpServer);
+
   test('1- Checking the default values on Dashboard', async () => {
     const history = createMemoryHistory();
     render(

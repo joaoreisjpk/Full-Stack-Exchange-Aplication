@@ -32,19 +32,18 @@ describe('Testing the history Page', () => {
   beforeAll((done) => {
     httpServer.listen('3333', () => {
       console.log('listening on 3333');
+      done();
       io.on('connection', (socket) => {
         socket.on('dashboardConnection', () => {
           socket.emit('currencyRates', currencyExchangeMockData)      
           socket.emit('intraDayRates', intraDayData);
         });
       });
-      done();
     });
   });
 
-  afterAll((done) => {
+  afterAll(() => {
     io.close();
-    done();
   });
 
   afterEach(() => {
