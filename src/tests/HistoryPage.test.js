@@ -7,6 +7,7 @@ import { createMemoryHistory } from 'history';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
+import { currencyExchangeMockData, intraDayData } from './mocks/DashboardPageMock';
 
 const mockFetch = async () => ({
   ok: true,
@@ -26,25 +27,24 @@ const getDeleteAllButton = async () =>
 describe('Testing the history Page', () => {
   /* Create server */
   const httpServer = createServer();
-  const sampleMessage = 'Hello world!';
   const io = new Server(httpServer);
 
   beforeAll((done) => {
     httpServer.listen('3333', () => {
       console.log('listening on 3333');
       io.on('connection', (socket) => {
-        socket.emit('message', sampleMessage);
-        socket.on('message', (message) => {
-          console.log(message);
+        socket.on('dashboardConnection', () => {
+          socket.emit('currencyRates', currencyExchangeMockData)      
+          socket.emit('intraDayRates', intraDayData);
         });
       });
+      done();
     });
-    done();
   });
 
   afterAll((done) => {
     io.close();
-    done()
+    done();
   });
 
   afterEach(() => {
@@ -153,7 +153,7 @@ describe('Testing the history Page', () => {
       expect(SyncGBPtoUSD.length).toBe(0);
       expect(SyncGBPtoBRL.length).toBe(0);
     });
-    screen.getByText('You didn\'t made a trade yet')
+    screen.getByText("You didn't made a trade yet");
 
     expect(global.fetch).toHaveBeenCalledTimes(7);
   });

@@ -1,15 +1,11 @@
-import {
-  fireEvent,
-  render,
-  screen,
-  within,
-} from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import Dashboard from '../pages/Dashboard';
 import userEvent from '@testing-library/user-event';
 import { TradesProvider } from '../hooks/useTrades';
 import { createServer, Server } from 'http';
+import { currencyExchangeMockData, intraDayData } from './mocks/DashboardPageMock';
 
 const updateButton = async () =>
   await screen.findByRole('button', {
