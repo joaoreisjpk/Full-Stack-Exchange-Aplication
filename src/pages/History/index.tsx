@@ -4,6 +4,7 @@ import HistoryItem from './HistoryItem';
 import { useTrades } from '../../hooks/useTrades';
 import { Box } from '@mui/system';
 import { LinearProgress } from '@mui/material';
+import Header from '../../components/Header';
 
 interface HistoryProps {
   baseCurrency: string;
@@ -55,6 +56,7 @@ export default function History() {
 
   return (
     <Grid container direction='column'>
+      <Header />
       <Stack gap={3} direction='column' margin='auto' padding={5}>
         <Typography variant='h2'>Resume</Typography>
         <Typography variant='h5'>
@@ -77,7 +79,7 @@ export default function History() {
 
         {loading ? (
           <Box sx={{ width: '100%', marginTop: '4rem', color: '#e66d6d' }}>
-            <LinearProgress color="inherit" />
+            <LinearProgress color='inherit' />
           </Box>
         ) : (
           historyList.map((item: HistoryProps) => (

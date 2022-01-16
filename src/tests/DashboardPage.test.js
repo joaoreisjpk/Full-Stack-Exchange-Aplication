@@ -1,11 +1,14 @@
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { findByText, fireEvent, render, screen, within } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import Dashboard from '../pages/Dashboard';
 import userEvent from '@testing-library/user-event';
 import { TradesProvider } from '../hooks/useTrades';
-import { createServer, Server } from 'http';
-import { currencyExchangeMockData, intraDayData } from './mocks/DashboardPageMock';
+import socketIOClient from 'socket.io-client';
+import MockedSocket from 'socket.io-mock';
+import { intraDayData, currencyExchangeMockData } from './mocks/DashboardPageMock'
+
+jest.mock('socket.io-client');
 
 const updateButton = async () =>
   await screen.findByRole('button', {
@@ -38,8 +41,17 @@ const getTextBox = () =>
 
 describe('testing SelectForms from DashBoardPage', () => {
   /* Create server */
-  const httpServer = createServer();
-  const io = new Server(httpServer);
+  let socket;
+
+  beforeEach(() => {
+    socket = new MockedSocket();
+    socketIOClient.mockReturnValue(socket);
+  });
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+    jest.clearAllMocks();
+  });
 
   test('1- Checking the default values on Dashboard', async () => {
     const history = createMemoryHistory();
@@ -121,6 +133,7 @@ describe('testing SelectForms from DashBoardPage', () => {
     await sendButton();
     await historyButton();
   });
+
   test('5- Checking the InputForms validation', async () => {
     const history = createMemoryHistory();
     render(
@@ -143,4 +156,25 @@ describe('testing SelectForms from DashBoardPage', () => {
     userEvent.click(await updateButton());
     await screen.findByText(/Please, put a number bigger then 0/i);
   });
+
+  test('6 - Checking the socket.io funcionality', (done) => {
+    const history = createMemoryHistory();
+    render(
+      <BrowserRouter history={history}>
+        <TradesProvider>
+          <Dashboard />
+        </TradesProvider>
+      </BrowserRouter>
+    );
+
+    
+    socket.socketClient.on('currencyRates', (data) => {
+      console.log(data)
+      done();
+    })
+    socket.emit('intraDayRates', intraDayData);
+    socket.emit('currencyRates', currencyExchangeMockData);
+
+    // await screen.findByText('1.37216');
+  })
 });

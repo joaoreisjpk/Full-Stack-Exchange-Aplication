@@ -1,13 +1,16 @@
-import { createServer, Server } from 'http';
 import { BrowserRouter } from 'react-router-dom';
-import { TradesProvider } from '../hooks/useTrades';
-import History from '../pages/History';
-import { HistoryMock } from './mocks/HisitoryPageMock';
 import { createMemoryHistory } from 'history';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
-import { currencyExchangeMockData, intraDayData } from './mocks/DashboardPageMock';
+import socketIOClient from 'socket.io-client';
+import MockedSocket from 'socket.io-mock';
+
+import History from '../pages/History';
+import { HistoryMock } from './mocks/HisitoryPageMock';
+import { TradesProvider } from '../hooks/useTrades';
+
+jest.mock('socket.io-client');
 
 const mockFetch = async () => ({
   ok: true,
@@ -26,27 +29,15 @@ const getDeleteAllButton = async () =>
 
 describe('Testing the history Page', () => {
   /* Create server */
-  const httpServer = createServer();
-  const io = new Server(httpServer);
+  let socket;
 
-  beforeAll((done) => {
-    httpServer.listen('3333', () => {
-      console.log('listening on 3333');
-      done();
-      io.on('connection', (socket) => {
-        socket.on('dashboardConnection', () => {
-          socket.emit('currencyRates', currencyExchangeMockData)      
-          socket.emit('intraDayRates', intraDayData);
-        });
-      });
-    });
-  });
-
-  afterAll(() => {
-    io.close();
+  beforeEach(() => {
+    socket = new MockedSocket();
+    socketIOClient.mockReturnValue(socket);
   });
 
   afterEach(() => {
+    jest.restoreAllMocks();
     jest.clearAllMocks();
   });
 

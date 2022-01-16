@@ -1,8 +1,9 @@
 import { screen, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
-import Login from '../pages/Login';
 import { createMemoryHistory } from 'history';
+
+import Login from '../pages/Login';
 
 const EMAIL = 'trybe@tryber.com';
 const PASSWORD = '12345678';
