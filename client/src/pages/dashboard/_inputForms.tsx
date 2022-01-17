@@ -32,8 +32,10 @@ export default function InputForms({ currency }: ICurrencyProps) {
     const { moneyAmount } = inputsData;
     socket.emit('tradesUpdate');
 
-    await fetch('http://localhost:3333/trades', {
+    try {
+      await fetch('http://localhost:3333/trades', {
       method: 'POST',
+      mode: 'cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         baseCurrency,
@@ -43,6 +45,9 @@ export default function InputForms({ currency }: ICurrencyProps) {
         exchangeAmount: Number(moneyAmount) * Number(currentCurrencyValue),
       }),
     });
+    } catch (err) {
+      console.log(err)
+    }
 
     resetForm();
   }
@@ -118,8 +123,7 @@ export default function InputForms({ currency }: ICurrencyProps) {
                 </Button>
                 <Button
                   endIcon={<SendIcon />}
-                  onClick={(): Promise<boolean> =>  push('./history')}
-                  size='large'
+                  onClick={(): Promise<boolean> =>  push('history')}
                   variant='contained'
                   sx={{
                     width: 265,

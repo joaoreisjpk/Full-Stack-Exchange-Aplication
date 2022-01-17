@@ -22,8 +22,12 @@ export default function History() {
   const { socket } = useTrades();
 
   const fetchTrades = async () => {
-    const request = await fetch('http://localhost:3333/trades');
+    console.log('fetch: ');
+    const request = await fetch('http://localhost:3333/trades', {
+      mode: 'cors',
+    });
     const response = await request.json();
+    console.log('fetch2: ', request);
     setHistoryList(response);
     setLoading(false);
   };
@@ -94,3 +98,15 @@ export default function History() {
     </Grid>
   );
 }
+
+/* export const getServerSideProps: GetServerSideProps = async () => {
+  const request = await fetch('http://localhost:3333/trades');
+    const response = await request.json();
+  return {
+    props: {
+      data: response,
+    },
+    redirect: 60 * 30
+  }
+}
+ */
