@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { Formik, Form } from 'formik';
 import SendIcon from '@mui/icons-material/Send';
 
-import MUInput from '../Components/MUInput';
+import MUInput from '../components/MUInput';
 
 export default function Home(): JSX.Element {
   const emailRegex: RegExp =
@@ -36,7 +36,7 @@ export default function Home(): JSX.Element {
           validate={({ password, email }) => validate({ password, email })}
           onSubmit={(): void => console.log('TODO') /* navigate('dashboard') */}
         >
-          {() => (
+          {(): JSX.Element => (
             <Form>
               <Grid
                 container
