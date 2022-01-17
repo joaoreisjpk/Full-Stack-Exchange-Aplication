@@ -1,5 +1,6 @@
 import { AppBar, Link, Toolbar, Typography } from '@mui/material';
 import Head from 'next/head';
+import NextLink from 'next/link';
 
 export default function Header() {
   return (
@@ -11,11 +12,13 @@ export default function Header() {
       </Head>
       <AppBar position='static'>
         <Toolbar variant='dense'>
-          <Link href='/dashboard' color='white' underline='none' width='100%'>
-            <Typography textAlign='center' variant='h5'>
-              WestPoint Exchange
-            </Typography>
-          </Link>
+          <NextLink href='/dashboard'>
+            <Link href='#' color='white' underline='none' width='100%'>
+              <Typography textAlign='center' variant='h5'>
+                WestPoint Exchange
+              </Typography>
+            </Link>
+          </NextLink>
         </Toolbar>
       </AppBar>
     </>

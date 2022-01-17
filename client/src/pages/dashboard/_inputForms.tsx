@@ -5,6 +5,7 @@ import SendIcon from '@mui/icons-material/Send';
 import { validateInputs } from '../../helpers';
 import { useTrades } from '../../hooks/useTrades';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useRouter } from 'next/router';
 
 interface ICurrencyProps {
   currency: {
@@ -20,6 +21,7 @@ interface InputsDataProps {
 
 export default function InputForms({ currency }: ICurrencyProps) {
   const { socket } = useTrades();
+  const { push } = useRouter()
 
   const { baseCurrency, currentCurrencyValue, exchangeCurrency } = currency;
 
@@ -116,7 +118,7 @@ export default function InputForms({ currency }: ICurrencyProps) {
                 </Button>
                 <Button
                   endIcon={<SendIcon />}
-                  onClick={() =>  console.log('TODO') /* navigate('/history') */}
+                  onClick={(): Promise<boolean> =>  push('./history')}
                   size='large'
                   variant='contained'
                   sx={{

@@ -32,12 +32,10 @@ export default function Dashboard(): JSX.Element {
     });
     socket.emit('dashboardConnection');
     socket.on('currencyRates', (data) => {
-      console.log(data);
       setCurrentCurrencyData(data); //
     });
 
     socket.on('intraDayRates', (data) => {
-      console.log(data);
       setCurrentIntraDayData(data);
     });
   }, [socket]);

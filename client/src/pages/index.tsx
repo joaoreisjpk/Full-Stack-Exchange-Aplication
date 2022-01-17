@@ -4,8 +4,11 @@ import { Formik, Form } from 'formik';
 import SendIcon from '@mui/icons-material/Send';
 
 import MUInput from '../components/MUInput';
+import { useRouter } from 'next/router';
 
 export default function Home(): JSX.Element {
+  const { push } = useRouter();
+
   const emailRegex: RegExp =
     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 
@@ -34,7 +37,7 @@ export default function Home(): JSX.Element {
         <Formik
           initialValues={{ password: '', email: '' }}
           validate={({ password, email }) => validate({ password, email })}
-          onSubmit={(): void => console.log('TODO') /* navigate('dashboard') */}
+          onSubmit={(): Promise<boolean> => push('dashboard')}
         >
           {(): JSX.Element => (
             <Form>
