@@ -4,9 +4,19 @@ import { ITradesRepository } from "./ITradesRepository";
 class TradesRepository implements ITradesRepository {
   private trades: Trade[];
 
-  constructor() {
+  private static INSTANCE: TradesRepository;
+
+  private constructor() {
     this.trades = []
   }
+
+  public static getInstance(): TradesRepository {
+    if(!TradesRepository.INSTANCE) {
+      TradesRepository.INSTANCE = new TradesRepository
+    }
+    return TradesRepository.INSTANCE
+  }
+
   remove(id: string): Trade[] {
     const newTradesArray = this.trades.filter((item) => (
       item.id !== id

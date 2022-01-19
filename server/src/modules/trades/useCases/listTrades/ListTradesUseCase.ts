@@ -1,4 +1,4 @@
-import { TradesRepository } from "../repositories/TradesRepository";
+import { TradesRepository } from "../../repositories/TradesRepository";
 
 interface IRequest {
   baseCurrency?: string;
@@ -10,14 +10,14 @@ interface IRequest {
   id?: string;
 }
 
-class CreateTradesService {
+class ListTradesUseCase {
   constructor(private tradesRepository: TradesRepository) {}
 
-  execute(data: IRequest): IRequest {
-    const newTrade = this.tradesRepository.create(data);
+  execute(): IRequest[] {
+    const newTrade = this.tradesRepository.list();
 
     return newTrade;
   }
 }
 
-export { CreateTradesService }
+export { ListTradesUseCase }

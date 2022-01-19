@@ -1,36 +1,22 @@
 import { Router } from 'express';
 import { TradesRepository } from '../modules/trades/repositories/TradesRepository';
-import { CreateTradesService } from '../services/CreateTradesService';
+import { createTradesController } from '../modules/trades/useCases/createTrade';
+import { listTradesController } from '../modules/trades/useCases/listTrades';
+import { ListTradesController } from '../modules/trades/useCases/listTrades/ListTradesController';
+import { removeTradesController } from '../modules/trades/useCases/removeTrade';
 
 const router = Router();
 
-const tradesRepository = new TradesRepository();
-
 router.get('/', async (req, res) => {
-  try {
-    const list = tradesRepository.list();
-    return res.json(list)
-  } catch (err) {
-    res.status(400).json({ message: err });
-  }
+  return listTradesController.handle(req, res)
 });
 
 router.post('/', async (req, res) => {
-  const createTradesService = new CreateTradesService(tradesRepository)
-
-  const newTrade = createTradesService.execute(req.body)
-
-  res.json({newTrade});
+  return createTradesController.handle(req, res)
 });
 
 router.delete('/:id', async (req, res) => {
-  try {
-    const newTradesArray = tradesRepository.remove(req.params.id)
-
-    res.json(newTradesArray);
-  } catch(err) {
-    res.json({message: err})
-  }
+  return removeTradesController.handle(req, res)
 });
 
 export default router;
