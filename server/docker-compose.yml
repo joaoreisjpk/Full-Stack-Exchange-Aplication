@@ -3,7 +3,7 @@ version: "3.7"
 services:
   app:
     build: .
-    container_name: academywp
+    container_name: academywestpoint
     ports:
       - 3333:3333
     volumes:

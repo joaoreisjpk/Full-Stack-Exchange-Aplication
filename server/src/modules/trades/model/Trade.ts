@@ -1,12 +1,13 @@
 import { v4 as uuidv4 } from 'uuid';
 
 class Trade {
-  id?: string;
-  gbpToUsd?: number;
-  usdToGbp?: number;
-  currencyExchange?: number;
+  baseCurrency?: string;
+  exchangeCurrency?: string;
+  moneyAmount?: number;
+  currentCurrencyValue?: number;
   exchangeAmount?: number;
   date?: Date;
+  id?: string;
 
   constructor() {
     if(!this.id) {

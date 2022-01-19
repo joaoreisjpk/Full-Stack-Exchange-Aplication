@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { TradesRepository } from '../repositories/TradesRepository';
+import { TradesRepository } from '../modules/trades/repositories/TradesRepository';
+import { CreateTradesService } from '../services/CreateTradesService';
 
 const router = Router();
 
@@ -15,38 +16,21 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  const { gbpToUsd, usdToGbp, currencyExchange, exchangeAmount } = req.body;
+  const createTradesService = new CreateTradesService(tradesRepository)
 
-  try {
-    tradesRepository.create({ gbpToUsd, usdToGbp, currencyExchange, exchangeAmount })
-  } catch (err) {
-    res.status(400).json({ message: err })
-  };
+  const newTrade = createTradesService.execute(req.body)
 
-  return res.status(201).send();
+  res.json({newTrade});
 });
 
-/* router.delete('/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
-    const updateDB = await Trade.deleteOne(
-      { _id: req.params.id }
-    )
-    res.json(updateDB);
-  } catch(err) {
-    res.json({message: err})
-  }
-}); */
+    const newTradesArray = tradesRepository.remove(req.params.id)
 
-/* router.delete('/wipe/:list', async (req, res) => {
-  const list = await JSON.parse(req.params.list);
-    try {
-    const updateDB = await Trade.deleteMany({
-      _id: '61d87b3928ac6ef3d8f4338b'
-    });
-    res.json(updateDB);
+    res.json(newTradesArray);
   } catch(err) {
     res.json({message: err})
   }
-}); */
+});
 
 export default router;

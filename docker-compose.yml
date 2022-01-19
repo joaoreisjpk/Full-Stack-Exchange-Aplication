@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  server:
+    build: ./server //o local do arquivo Dockerfile
+    container_name: server-container
+    ports:
+      - 3333:3333
+    volumes:
+      - .:/usr/server
+  client:
+    build: ./client
+    container_name: client-container
+    ports:
+      - 3000:3000
+    depends_on:
+      - server
+    volumes:
+      - .:/usr/client
+    
