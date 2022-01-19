@@ -1,37 +1,18 @@
-import mongoose from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
-export interface TradeSchemaProps {
-  baseCurrency: string;
-  exchangeCurrency: string;
-  moneyAmount: number;
-  currentCurrencyValue: number;
-  exchangeAmount: number;
+class Trade {
+  id?: string;
+  gbpToUsd?: number;
+  usdToGbp?: number;
+  currencyExchange?: number;
+  exchangeAmount?: number;
   date?: Date;
+
+  constructor() {
+    if(!this.id) {
+      this.id = uuidv4();
+    }
+  }
 }
 
-export const TradeSchema = new mongoose.Schema<TradeSchemaProps>({
-  baseCurrency: {
-    type: String,
-    required: true,
-  },
-  exchangeCurrency: {
-    type: String,
-    required: true,
-  },
-  moneyAmount: {
-    type: Number,
-    required: true,
-  },
-  currentCurrencyValue: {
-    type: Number,
-    required: true,
-  },
-  exchangeAmount: {
-    type: Number,
-    required: true,
-  },
-  date: {
-    type: Date,
-    default: Date.now
-  }
-});
+export { Trade }

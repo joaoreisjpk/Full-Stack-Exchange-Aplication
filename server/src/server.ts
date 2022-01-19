@@ -14,7 +14,7 @@ app.use(express.json());
 app.use('/trades', tradesRoute);
 
 app.get('/', (req, res) => {
-  res.status(201).send('We are on home');
+  res.send('We are on home');
 });
 
 const dbUrl: string = process.env.DB_CONNECTION || '';
