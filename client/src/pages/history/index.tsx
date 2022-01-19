@@ -5,6 +5,7 @@ import { useTrades } from '../../hooks/useTrades';
 import { Box } from '@mui/system';
 import { LinearProgress } from '@mui/material';
 import Header from '../../components/Header';
+import { GetServerSideProps } from 'next';
 
 interface HistoryProps {
   baseCurrency: string;
@@ -16,24 +17,17 @@ interface HistoryProps {
   _id: string;
 }
 
-export default function History() {
-  const [historyList, setHistoryList] = useState<HistoryProps[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function History({
+  data,
+}: {
+  data: HistoryProps[];
+}): JSX.Element {
+  const [historyList, setHistoryList] = useState<HistoryProps[]>(data || []);
+  const [loading, setLoading] = useState(false);
   const { socket } = useTrades();
 
-  const fetchTrades = async () => {
-    console.log('fetch: ');
-    const request = await fetch('http://localhost:3333/trades', {
-      mode: 'cors',
-    });
-    const response = await request.json();
-    console.log('fetch2: ', request);
-    setHistoryList(response);
-    setLoading(false);
-  };
-
-  function handleDeleteTrade(id: string) {
-    const newHistoryList = historyList.filter((item) => item._id !== id);
+  function handleDeleteTrade(id: string): void {
+    const newHistoryList: HistoryProps[] = historyList.filter((item) => item._id !== id);
     fetch(`http://localhost:3333/trades/${id}`, {
       method: 'DELETE',
     });
@@ -51,11 +45,14 @@ export default function History() {
     socket.emit('tradesUpdate');
   }
 
-  useEffect(() => {
+  useEffect((): void => {
     socket.on('newTrade', async () => {
-      fetchTrades();
+      setLoading(true)
+      const request = await fetch('http://localhost:3333/trades');
+      const response: HistoryProps[] = await request.json();
+      setHistoryList(response);
+      setLoading(false)
     });
-    fetchTrades();
   }, [socket]);
 
   return (
@@ -99,14 +96,13 @@ export default function History() {
   );
 }
 
-/* export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const request = await fetch('http://localhost:3333/trades');
-    const response = await request.json();
+  const response: HistoryProps[] = (await request.json()) || [];
   return {
     props: {
       data: response,
     },
-    redirect: 60 * 30
-  }
-}
- */
+    redirect: 60 * 30,
+  };
+};

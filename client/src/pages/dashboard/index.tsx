@@ -32,7 +32,7 @@ export default function Dashboard(): JSX.Element {
     });
     socket.emit('dashboardConnection');
     socket.on('currencyRates', (data) => {
-      setCurrentCurrencyData(data); //
+      setCurrentCurrencyData(data);
     });
 
     socket.on('intraDayRates', (data) => {
