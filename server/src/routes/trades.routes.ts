@@ -1,8 +1,6 @@
 import { Router } from 'express';
-import { TradesRepository } from '../modules/trades/repositories/TradesRepository';
 import { createTradesController } from '../modules/trades/useCases/createTrade';
 import { listTradesController } from '../modules/trades/useCases/listTrades';
-import { ListTradesController } from '../modules/trades/useCases/listTrades/ListTradesController';
 import { removeTradesController } from '../modules/trades/useCases/removeTrade';
 
 const router = Router();
