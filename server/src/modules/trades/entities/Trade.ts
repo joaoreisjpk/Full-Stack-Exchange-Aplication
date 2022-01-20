@@ -1,13 +1,28 @@
 import { v4 as uuidv4 } from 'uuid';
+import { Column, CreateDateColumn, Entity, PrimaryColumn } from 'typeorm';
 
+@Entity('trades')
 class Trade {
-  baseCurrency?: string;
-  exchangeCurrency?: string;
-  moneyAmount?: number;
-  currentCurrencyValue?: number;
-  exchangeAmount?: number;
-  date?: Date;
+  @PrimaryColumn()
   id?: string;
+
+  @Column()
+  baseCurrency?: string;
+ 
+  @Column()
+  exchangeCurrency?: string;
+ 
+  @Column()
+  moneyAmount?: number;
+
+  @Column() 
+  currentCurrencyValue?: number;
+  
+  @Column()
+  exchangeAmount?: number;
+
+  @CreateDateColumn()
+  date?: Date;
 
   constructor() {
     if(!this.id) {

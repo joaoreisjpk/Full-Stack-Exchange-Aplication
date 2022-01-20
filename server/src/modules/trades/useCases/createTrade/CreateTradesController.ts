@@ -4,8 +4,8 @@ import { CreateTradesUseCase } from "./CreateTradesUseCase";
 class CreateTradesController {
   constructor(private createTradesUseCase: CreateTradesUseCase) {}
 
-  handle(req: Request, res: Response): Response {
-    const newTrade = this.createTradesUseCase.execute(req.body)
+  async handle(req: Request, res: Response): Promise<Response> {
+    const newTrade = await this.createTradesUseCase.execute(req.body)
 
     return res.status(201).json({ newTrade });
   }

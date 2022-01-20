@@ -2,8 +2,11 @@ import { TradesRepository } from "../../repositories/TradesRepository";
 import { CreateTradesController } from "./CreateTradesController";
 import { CreateTradesUseCase } from "./CreateTradesUseCase";
 
-const tradesRepository = TradesRepository.getInstance();
-const createTradesUseCase = new CreateTradesUseCase(tradesRepository);
-const createTradesController = new CreateTradesController(createTradesUseCase)
+console.log('Arquivo category')
 
-export { createTradesController };
+export default () => {
+  const tradesRepository = new TradesRepository();
+  const createTradesUseCase = new CreateTradesUseCase(tradesRepository);
+  
+  return new CreateTradesController(createTradesUseCase)
+}

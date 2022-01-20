@@ -1,47 +1,37 @@
-import { Trade } from "../model/Trade";
+import { Trade } from "../entities/Trade";
 import { ITradesRepository } from "./ITradesRepository";
 
+import { getRepository, Repository } from 'typeorm';
+
 class TradesRepository implements ITradesRepository {
-  private trades: Trade[];
+  private repository: Repository<Trade>
 
-  private static INSTANCE: TradesRepository;
-
-  private constructor() {
-    this.trades = []
+  constructor() {
+    this.repository = getRepository(Trade)
   }
 
-  public static getInstance(): TradesRepository {
-    if(!TradesRepository.INSTANCE) {
-      TradesRepository.INSTANCE = new TradesRepository
-    }
-    return TradesRepository.INSTANCE
-  }
-
-  remove(id: string): Trade[] {
-    const newTradesArray = this.trades.filter((item) => (
-      item.id !== id
-    ));
-    this.trades = newTradesArray;
+  async remove(id: string): Promise<Trade> {
+    const newTradesArray = await this.repository.remove({ id })
     return newTradesArray;
   }
 
-  create({ baseCurrency, currentCurrencyValue, exchangeAmount, exchangeCurrency, moneyAmount }: Trade): Trade {
-    const trade = {
-      ...new Trade(),
-      baseCurrency,
-      currentCurrencyValue,
-      exchangeAmount,
-      exchangeCurrency,
-      moneyAmount,
-      date: new Date(),
-    }
+  async create({ baseCurrency, currentCurrencyValue, exchangeAmount, exchangeCurrency, moneyAmount }: Trade): Promise<Trade> {
+    const trade = this.repository.create(
+      {
+        baseCurrency,
+        currentCurrencyValue,
+        exchangeAmount,
+        exchangeCurrency,
+        moneyAmount
+      });
 
-    this.trades.push(trade)
+    await this.repository.save(trade)
     return trade;
   }
 
-  list(): Trade[] {
-    return this.trades;
+  async list(): Promise<Trade[]> {
+    const tradeList = await this.repository.find();
+    return tradeList;
   }
 }
 

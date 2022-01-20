@@ -4,6 +4,7 @@ import './websocket';
 
 import { serverHttp, app } from './http';
 
+import './database';
 import 'dotenv/config';
 import {router} from './routes';
 

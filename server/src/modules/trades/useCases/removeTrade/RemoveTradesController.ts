@@ -4,9 +4,9 @@ import { RemoveTradesUseCase } from "./RemoveTradesUseCase";
 class RemoveTradesController {
   constructor(private listTradesUseCase: RemoveTradesUseCase) {}
 
-  handle(req: Request, res: Response): Response {
+  async handle(req: Request, res: Response): Promise<Response> {
     try {
-      const newTradesArray = this.listTradesUseCase.execute(req.params.id)
+      const newTradesArray = await this.listTradesUseCase.execute(req.params.id)
       return res.json(newTradesArray);
     } catch(err) {
       return res.json({message: err})

@@ -13,8 +13,8 @@ interface IRequest {
 class CreateTradesUseCase {
   constructor(private tradesRepository: TradesRepository) {}
 
-  execute(data: IRequest): IRequest {
-    const newTrade = this.tradesRepository.create(data);
+  async execute(data: IRequest): Promise<IRequest> {
+    const newTrade = await this.tradesRepository.create(data);
 
     return newTrade;
   }

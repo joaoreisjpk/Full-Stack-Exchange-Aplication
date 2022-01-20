@@ -1,9 +1,9 @@
-import { Trade } from "../model/Trade";
+import { Trade } from "../entities/Trade";
 
 interface ITradesRepository {
-  list(): Trade[];
-  create({}): void;
-  remove(id: string): void;
+  list(): Promise<Trade[]>;
+  create({}): Promise<Trade>;
+  remove(id: string): Promise<Trade>;
 }
 
 export { ITradesRepository };
