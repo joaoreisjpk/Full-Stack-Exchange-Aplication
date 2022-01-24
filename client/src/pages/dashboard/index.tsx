@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Box, CircularProgress, Stack, Typography } from '@mui/material';
+import { useTranslation } from 'next-i18next'
 
 import { useTrades } from '../../hooks/useTrades';
 import SelectForms from './_selectForms';
@@ -12,8 +13,9 @@ interface GraphicDataProps {
   exchangeCurrency: string;
 }
 
-export default function Dashboard(): JSX.Element {
+export default function Dashboard(param: any): JSX.Element {
   const { socket } = useTrades();
+  const { t } = useTranslation('common');
 
   const [currentIntraDayData, setCurrentIntraDayData] = useState({} as any);
   const [currentCurrencyData, setCurrentCurrencyData] = useState({} as any);
@@ -27,6 +29,7 @@ export default function Dashboard(): JSX.Element {
   const { baseCurrency, exchangeCurrency } = currency;
 
   useEffect(() => {
+    console.log(param)
     socket.on('connect', () => {
       console.log(`Connected with ${socket.id}`);
     });
@@ -72,7 +75,7 @@ export default function Dashboard(): JSX.Element {
         className='maindiv'
       >
         <Typography fontSize='1.2rem' marginTop='2rem' align='center'>
-          The current exchange from {baseCurrency} to {exchangeCurrency} is{' '}
+          {t('currentExchange')} {baseCurrency} {t('to')} {exchangeCurrency} {t('is')} {' '}
           {currentCurrencyValue ? (
             Number(currentCurrencyValue).toFixed(3)
           ) : (
@@ -98,20 +101,20 @@ export default function Dashboard(): JSX.Element {
         >
           <Box>
             <Typography variant='h5' textAlign='center'>
-              Select your currency:
+              {t('selectTitle')}:
             </Typography>
             <SelectForms submitHandler={submitHandler} />
           </Box>
           <Box>
             <Typography variant='h5' textAlign='center'>
-              Exchange your money:
+              {t('inputTitle')}
             </Typography>
             <InputForms currency={{ ...currency, currentCurrencyValue }} />
           </Box>
         </Stack>
         <Box width='80%' mt='3rem' alignContent={'center'}>
           <Typography variant='h5' textAlign='center'>
-            Exchange chart {baseCurrency} to {exchangeCurrency}
+            {t('chart')} {baseCurrency} {t('to')} {exchangeCurrency}
           </Typography>
           <Chart currentIntraDay={currentIntraDay} />
         </Box>
@@ -119,3 +122,16 @@ export default function Dashboard(): JSX.Element {
     </>
   );
 }
+
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { GetStaticProps } from 'next';
+
+export const getStaticProps: GetStaticProps = async ({ locale }) => {
+  const local: any = locale;
+  return {
+    props: {
+      ...(await serverSideTranslations(local, ['common'])),
+      // Will be passed to the page component as props
+    },
+  };
+};

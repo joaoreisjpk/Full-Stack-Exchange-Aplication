@@ -4,12 +4,11 @@ NodeJS-API-RocketSeat
 */node_modules
 /.pnp
 .pnp.js
-
+client/.next
 # testing
 /coverage
 
 # next.js
-client/.next
 /out/
 
 # production

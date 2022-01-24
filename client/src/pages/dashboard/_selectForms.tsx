@@ -9,6 +9,8 @@ import {
 import MUISelect from '../../components/MUISelect';
 import SendIcon from '@mui/icons-material/Send';
 import { Form, Formik } from 'formik';
+import { useTranslation } from 'next-i18next'
+
 
 interface GraphicDataProps {
   baseCurrency: string;
@@ -20,6 +22,8 @@ interface ISelectForms {
 }
 
 export default function SelectForms({submitHandler}: ISelectForms) {
+  const { t } = useTranslation('common');
+
   return (
     <Formik
       initialValues={{
@@ -39,7 +43,7 @@ export default function SelectForms({submitHandler}: ISelectForms) {
       <Form>
         <Grid
           container
-          marginTop='2.5rem'
+          marginTop='1.8rem'
           gap={4}
           justifyItems='center'
           direction='column'
@@ -48,19 +52,19 @@ export default function SelectForms({submitHandler}: ISelectForms) {
         >
           <Stack spacing={2}>
             <FormControl fullWidth>
-              <InputLabel id='baseCurrency'>Base Currency</InputLabel>
+              <InputLabel id='baseCurrency'>{t('baseCurrency')}</InputLabel>
               <MUISelect name='baseCurrency' label='exchangeCurrency'>
-                <MenuItem value='GBP'>United Kingdom (GBP)</MenuItem>
-                <MenuItem value='USD'>United States (USD)</MenuItem>
-                <MenuItem value='BRL'>Brazil (BRL)</MenuItem>
+                <MenuItem value='GBP'>{t('unitedKingdom')}</MenuItem>
+                <MenuItem value='USD'>{t('unitedStates')}</MenuItem>
+                <MenuItem value='BRL'>{t('brazil')}</MenuItem>
            </MUISelect>
             </FormControl>
             <FormControl fullWidth>
-              <InputLabel id='exchangeCurrency'>Exchange Currency</InputLabel>
+              <InputLabel id='exchangeCurrency'>{t('exchangeCurrency')}</InputLabel>
               <MUISelect name='exchangeCurrency' label='exchangeCurrency'>
-                <MenuItem value='USD'>United States (USD)</MenuItem>
-                <MenuItem value='GBP'>United Kingdom (GBP)</MenuItem>
-                <MenuItem value='BRL'>Brazil (BRL)</MenuItem>
+                <MenuItem value='USD'>{t('unitedStates')}</MenuItem>
+                <MenuItem value='GBP'>{t('unitedKingdom')}</MenuItem>
+                <MenuItem value='BRL'>{t('brazil')}</MenuItem>
               </MUISelect>
             </FormControl>
             <Button
@@ -72,7 +76,7 @@ export default function SelectForms({submitHandler}: ISelectForms) {
                 width: 265,
               }}
             >
-              Update
+              {t('updateButton')}
             </Button>
           </Stack>
         </Grid>
