@@ -8,16 +8,16 @@ class Trade {
 
   @Column()
   baseCurrency?: string;
- 
+
   @Column()
   exchangeCurrency?: string;
- 
+
   @Column()
   moneyAmount?: number;
 
   @Column() 
   currentCurrencyValue?: number;
-  
+
   @Column()
   exchangeAmount?: number;
 

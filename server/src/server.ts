@@ -6,7 +6,7 @@ import { serverHttp, app } from './http';
 
 import './database';
 import 'dotenv/config';
-import {router} from './routes';
+import { router } from './routes';
 
 app.use(cors());
 app.use(express.json());

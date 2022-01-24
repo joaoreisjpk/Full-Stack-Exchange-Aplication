@@ -10,6 +10,11 @@ class TradesRepository implements ITradesRepository {
     this.repository = getRepository(Trade)
   }
 
+  async wipe(): Promise<void> {
+    const newTradesArray = await this.repository.clear()
+    return newTradesArray;
+  }
+
   async remove(id: string): Promise<Trade> {
     const newTradesArray = await this.repository.remove({ id })
     return newTradesArray;
