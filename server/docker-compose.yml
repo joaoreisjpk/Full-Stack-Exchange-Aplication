@@ -1,9 +1,13 @@
-version: "3.7"
-
 services:
+<<<<<<< HEAD
   database:
     image: postgres
     container_name: databasewpp
+=======
+  database: #ESSE É O NOME DO SERVICE QUE DEVE ESTAR NO ARQUIVO DE CRIAÇÃO DE CONEXÃO
+    image: postgres
+    container_name: database_ignite
+>>>>>>> 38bab011f27f69eb298bb76a2dc71fd30f19f3fa
     restart: always
     ports: 
       - 5432:5432
@@ -13,6 +17,7 @@ services:
       - POSTGRES_DB=academywestpoint
     volumes:
       - pgdata:/data/postgres
+<<<<<<< HEAD
     network_mode: host
 
   redis:
@@ -42,13 +47,30 @@ services:
       REDIS_URL: redis:6379
       CHOKIDAR_USEPOLLING: 'true'
       CHOKIDAR_INTERVAL: 1000
+=======
+
+
+  app:
+    build: .
+    container_name: academywestpoint
+    restart: always
+>>>>>>> 38bab011f27f69eb298bb76a2dc71fd30f19f3fa
     ports: 
       - 3333:3333
-    volumes:
+    volumes: 
       - .:/usr/app
+<<<<<<< HEAD
     network_mode: host
     depends_on:
       - redis
+=======
+    links: 
+      - database
+    depends_on:
+      - database
+
+
+>>>>>>> 38bab011f27f69eb298bb76a2dc71fd30f19f3fa
 
 volumes:
   pgdata:
