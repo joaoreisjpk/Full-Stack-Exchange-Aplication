@@ -1,0 +1,12 @@
+{
+  "title": "Histórico das transações",
+  "to": "para",
+  "deleteButton": "Deletar transação",
+  "deleteAllButton": "Deletar todo o Histórico",
+  "noTrades": "You didn't made a trade yet",
+  "youHave": "Você possui",
+  "trades": "transações no seu histórico",
+  "exchangeRate": "Taxa de Câmbio :",
+  "baseAmount": "Montante Base :",
+  "exchangeAmount": "Montante Trocado :"
+}

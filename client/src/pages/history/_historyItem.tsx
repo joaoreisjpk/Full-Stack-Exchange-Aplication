@@ -1,4 +1,6 @@
 import { Box, Button, Stack, Typography } from '@mui/material';
+import { useTranslation } from 'next-i18next';
+
 
 interface HistoryProps {
   data: {
@@ -8,14 +10,15 @@ interface HistoryProps {
     currentCurrencyValue: number;
     exchangeAmount: number;
     date: Date;
-    _id: string;
+    id: string;
   };
   handleDeleteTrade: (id: string) => void;
 }
 
 export default function HistoryItem({ data, handleDeleteTrade }: HistoryProps) {
+  const { t } = useTranslation('history');
   const {
-    _id,
+    id,
     baseCurrency,
     currentCurrencyValue,
     date,
@@ -35,7 +38,7 @@ export default function HistoryItem({ data, handleDeleteTrade }: HistoryProps) {
   };
   return (
     <Box
-      id={_id}
+      id={id}
       border='2px solid black'
       padding='2rem'
       gap='1rem'
@@ -43,20 +46,20 @@ export default function HistoryItem({ data, handleDeleteTrade }: HistoryProps) {
       display='flex'
     >
       <Typography variant='h5' textAlign='center'>
-        {baseCurrency} to {exchangeCurrency}
+        {baseCurrency} {t('to')} {exchangeCurrency}
       </Typography>
       <Typography variant='h5'>
-        Exchange Rate: {Number(currentCurrencyValue).toFixed(2)}
+      {t('exchangeRate')} {Number(currentCurrencyValue).toFixed(2)}
       </Typography>
       <Typography variant='h5'>
-        Base amount:{' '}
+      {t('baseAmount')}{' '}
         {new Intl.NumberFormat('en-GB', {
           style: 'currency',
           currency: baseCurrency,
         }).format(moneyAmount)}
       </Typography>
       <Typography variant='h5'>
-        Exchanged Amount{' '}
+      {t('exchangeAmount')}{' '}
         {new Intl.NumberFormat('en-GB', {
           style: 'currency',
           currency: exchangeCurrency,
@@ -64,7 +67,7 @@ export default function HistoryItem({ data, handleDeleteTrade }: HistoryProps) {
       </Typography>
       <Stack direction='row' justifyContent='space-between'>
         <Button
-          onClick={() => handleDeleteTrade(_id)}
+          onClick={() => handleDeleteTrade(id)}
           size='small'
           variant='contained'
           sx={{
@@ -72,7 +75,7 @@ export default function HistoryItem({ data, handleDeleteTrade }: HistoryProps) {
             fontWeight: 400,
           }}
         >
-          Delete item
+          {t('deleteButton')}
         </Button>
         <Typography variant='h6' textAlign='end'>
           {new Intl.DateTimeFormat('en-GB', options).format(new Date(date))}

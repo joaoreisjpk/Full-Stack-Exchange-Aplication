@@ -1,6 +1,7 @@
 import { AppProps } from 'next/app';
 import { CssBaseline } from '@mui/material';
 import { TradesProvider } from '../hooks/useTrades';
+import { appWithTranslation } from 'next-i18next';
 
 function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
@@ -15,4 +16,4 @@ function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   );
 }
 
-export default MyApp;
+export default appWithTranslation(MyApp);

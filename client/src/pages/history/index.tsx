@@ -1,10 +1,13 @@
 import { Button, Grid, Stack, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
-import HistoryItem from './_historyItem';
-import { useTrades } from '../../hooks/useTrades';
 import { Box } from '@mui/system';
 import { LinearProgress } from '@mui/material';
+import { GetServerSideProps } from 'next';
+import { useTranslation } from 'next-i18next';
+
+import { useTrades } from '../../hooks/useTrades';
 import Header from '../../components/Header';
+import HistoryItem from './_historyItem';
 
 interface HistoryProps {
   baseCurrency: string;
@@ -13,27 +16,24 @@ interface HistoryProps {
   currentCurrencyValue: number;
   exchangeAmount: number;
   date: Date;
-  _id: string;
+  id: string;
 }
 
-export default function History() {
-  const [historyList, setHistoryList] = useState<HistoryProps[]>([]);
-  const [loading, setLoading] = useState(true);
+export default function History({
+  data,
+}: {
+  data: HistoryProps[];
+}): JSX.Element {
   const { socket } = useTrades();
+  const { t } = useTranslation('history');
 
-  const fetchTrades = async () => {
-    console.log('fetch: ');
-    const request = await fetch('http://localhost:3333/trades', {
-      mode: 'cors',
-    });
-    const response = await request.json();
-    console.log('fetch2: ', request);
-    setHistoryList(response);
-    setLoading(false);
-  };
+  const [historyList, setHistoryList] = useState<HistoryProps[]>(data || []);
+  const [loading, setLoading] = useState(false);
 
-  function handleDeleteTrade(id: string) {
-    const newHistoryList = historyList.filter((item) => item._id !== id);
+  function handleDeleteTrade(id: string): void {
+    const newHistoryList: HistoryProps[] = historyList.filter(
+      (item) => item.id !== id
+    );
     fetch(`http://localhost:3333/trades/${id}`, {
       method: 'DELETE',
     });
@@ -43,30 +43,31 @@ export default function History() {
 
   function handleWipeData() {
     setHistoryList([]);
-    for (const { _id } of historyList) {
-      fetch(`http://localhost:3333/trades/${_id}`, {
-        method: 'DELETE',
-      });
-    }
+    fetch('http://localhost:3333/trades/wipe', {
+      method: 'DELETE',
+    });
     socket.emit('tradesUpdate');
   }
 
-  useEffect(() => {
+  useEffect((): void => {
     socket.on('newTrade', async () => {
-      fetchTrades();
+      setLoading(true);
+      const request = await fetch('http://localhost:3333/trades');
+      const response: HistoryProps[] = await request.json();
+      setHistoryList(response);
+      setLoading(false);
     });
-    fetchTrades();
   }, [socket]);
 
   return (
     <Grid container direction='column'>
       <Header />
       <Stack gap={3} direction='column' margin='auto' padding={5}>
-        <Typography variant='h2'>Resume</Typography>
+        <Typography fontSize='2.5rem'>{t('title')}</Typography>
         <Typography variant='h5'>
           {!historyList.length
-            ? "You didn't made a trade yet"
-            : `You have ${historyList.length} trades on your history`}
+            ? t('noTrades')
+            : `${t('youHave')} ${historyList.length} ${t('trades')}`}
         </Typography>
         <Button
           onClick={handleWipeData}
@@ -78,7 +79,7 @@ export default function History() {
             fontWeight: 700,
           }}
         >
-          Delete all history
+          {t('deleteAllButton')}
         </Button>
 
         {loading ? (
@@ -89,7 +90,7 @@ export default function History() {
           historyList.map((item: HistoryProps) => (
             <HistoryItem
               data={item}
-              key={item._id}
+              key={item.id}
               handleDeleteTrade={handleDeleteTrade}
             />
           ))
@@ -99,14 +100,17 @@ export default function History() {
   );
 }
 
-/* export const getServerSideProps: GetServerSideProps = async () => {
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+export const getServerSideProps: GetServerSideProps = async ({ locale }) => {
+  const local: any = locale;
   const request = await fetch('http://localhost:3333/trades');
-    const response = await request.json();
+  const response: HistoryProps[] = (await request.json()) || [];
   return {
     props: {
       data: response,
+      ...(await serverSideTranslations(local, ['common', 'history'])),
     },
-    redirect: 60 * 30
-  }
-}
- */
+    redirect: 60 * 30,
+  };
+};

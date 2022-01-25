@@ -1,11 +1,13 @@
 import { Button, Grid, Stack, Typography } from '@mui/material';
 import { Form, Formik } from 'formik';
-import MUInput from '../../components/MUInput';
 import SendIcon from '@mui/icons-material/Send';
-import { validateInputs } from '../../helpers';
-import { useTrades } from '../../hooks/useTrades';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next'
+
+import MUInput from '../../components/MUInput';
+import { validateInputs } from '../../helpers';
+import { useTrades } from '../../hooks/useTrades';
 
 interface ICurrencyProps {
   currency: {
@@ -22,6 +24,7 @@ interface InputsDataProps {
 export default function InputForms({ currency }: ICurrencyProps) {
   const { socket } = useTrades();
   const { push } = useRouter()
+  const { t } = useTranslation('common');
 
   const { baseCurrency, currentCurrencyValue, exchangeCurrency } = currency;
 
@@ -40,8 +43,8 @@ export default function InputForms({ currency }: ICurrencyProps) {
       body: JSON.stringify({
         baseCurrency,
         exchangeCurrency,
-        moneyAmount,
-        currentCurrencyValue: currentCurrencyValue,
+        moneyAmount: Number(moneyAmount),
+        currentCurrencyValue: Number(currentCurrencyValue),
         exchangeAmount: Number(moneyAmount) * Number(currentCurrencyValue),
       }),
     });
@@ -66,7 +69,6 @@ export default function InputForms({ currency }: ICurrencyProps) {
       ): Promise<void> => {
         setSubmitting(true);
         await submitHandler(inputsData, resetForm);
-        /* setSubmitting(false); */
       }}
     >
       {({ isSubmitting }) => {
@@ -88,12 +90,12 @@ export default function InputForms({ currency }: ICurrencyProps) {
                   component='label'
                   htmlFor='moneyAmount'
                 >
-                  {baseCurrency} to {exchangeCurrency}
+                  {baseCurrency} {t('to')} {exchangeCurrency}
                 </Typography>
                 <MUInput
                   type='number'
                   name='moneyAmount'
-                  label={`${exchangeCurrency} $`}
+                  label={`${baseCurrency} $`}
                 />{' '}
                 <Button
                   endIcon={isSubmitting ? null : <SendIcon />}
@@ -119,7 +121,7 @@ export default function InputForms({ currency }: ICurrencyProps) {
                       }}
                     />
                   )}
-                  Send
+                  {t('sendButton')}
                 </Button>
                 <Button
                   endIcon={<SendIcon />}
@@ -129,7 +131,7 @@ export default function InputForms({ currency }: ICurrencyProps) {
                     width: 265,
                   }}
                 >
-                  History
+                  {t('historyButton')}
                 </Button>
               </Stack>
             </Grid>

@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  app:
+    build: .
+    container_name: academywpfront
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/app
+    network_mode: host

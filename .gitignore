@@ -1,15 +1,14 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
+NodeJS-API-RocketSeat
 # dependencies
 */node_modules
 /.pnp
 .pnp.js
-
+client/.next
 # testing
 /coverage
 
 # next.js
-client/.next
 /out/
 
 # production

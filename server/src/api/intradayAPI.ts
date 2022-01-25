@@ -1,7 +1,7 @@
 import { api } from "./api";
 import 'dotenv/config';
 
-const key= process.env.KEY2;
+const key = process.env.KEY2;
 
 const handleRequest = (data: any, num: number): string[][] | void => {
   try {
@@ -14,7 +14,6 @@ const handleRequest = (data: any, num: number): string[][] | void => {
     ));
     return map;
   } catch (err) {
-    console.log('intraDay: ', num, err);
   };
 };
 
@@ -24,7 +23,7 @@ const calculateIntradayCurrencyExchange = async (baseCurrency: string, exchangeC
       .get(`query?function=FX_INTRADAY&from_symbol=${baseCurrency}&to_symbol=${exchangeCurrency}&interval=60min&apikey=${key}`);
     return handleRequest(response.data, num);
   } catch (err: any) {
-    console.log(err);
+    console.log(err)
   }
 }
 
