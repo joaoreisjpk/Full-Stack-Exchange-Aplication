@@ -1,0 +1,19 @@
+{
+  "name": "Westpoint",
+  "title":"Taxa de câmbio Westpoint",
+  "baseCurrency": "Moeda Base",
+  "exchangeCurrency": "Moeda de Troca",
+  "langConfig": "Change to US-English",
+  "selectTitle": "Selecione as Moedas",
+  "inputTitle": "Troque seu dinheiro",
+  "to": "para",
+  "is": "é",
+  "sendButton": "enviar",
+  "historyButton": "histórico",
+  "updateButton": "atualizar",
+  "chart": "Gráfico da taxa de câmbio",
+  "currentExchange": "A taxa de câmbio atual entre",
+  "brazil": "Brasil (BRL)",
+  "unitedKingdom": "Reino Unido (GBP)",
+  "unitedStates": "Estados Unidos (USD)"
+}

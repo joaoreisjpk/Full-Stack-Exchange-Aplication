@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import createTradesController from '../modules/trades/useCases/createTrade';
 import listTradesController from '../modules/trades/useCases/listTrades';
 import removeTradesController from '../modules/trades/useCases/removeTrade';
 import wipeTradesController from '../modules/trades/useCases/wipeTrades';
+import { sendNewTrade } from '../queues/trades.queue';
 
 const router = Router();
 
@@ -11,7 +11,8 @@ router.get('/', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-  return createTradesController().handle(req, res)
+  await sendNewTrade(req.body);
+  return res.send({ message: 'yay' })
 });
 
 router.delete('/wipe', async (req, res) => {

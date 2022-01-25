@@ -29,7 +29,6 @@ export default function Dashboard(param: any): JSX.Element {
   const { baseCurrency, exchangeCurrency } = currency;
 
   useEffect(() => {
-    console.log(param)
     socket.on('connect', () => {
       console.log(`Connected with ${socket.id}`);
     });
@@ -131,7 +130,6 @@ export const getStaticProps: GetStaticProps = async ({ locale }) => {
   return {
     props: {
       ...(await serverSideTranslations(local, ['common'])),
-      // Will be passed to the page component as props
     },
   };
 };

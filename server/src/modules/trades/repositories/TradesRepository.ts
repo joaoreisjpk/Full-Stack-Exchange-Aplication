@@ -1,6 +1,5 @@
 import { Trade } from "../entities/Trade";
 import { ITradesRepository } from "./ITradesRepository";
-
 import { getRepository, Repository } from 'typeorm';
 
 class TradesRepository implements ITradesRepository {

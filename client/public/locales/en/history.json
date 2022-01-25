@@ -1,0 +1,12 @@
+{
+  "title": "Trades History",
+  "to": "to",
+  "deleteButton": "Deletar item",
+  "deleteAllButton": "delete all history",
+  "noTrades": "Você ainda não fez uma transação",
+  "youHave": "You have",
+  "trades": "trades on your history",
+  "exchangeRate": "Exchange Rate :",
+  "baseAmount": "Base Amount :",
+  "exchangeAmount": "Exchanged Amount"
+}

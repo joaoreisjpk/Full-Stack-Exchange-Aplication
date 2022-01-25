@@ -1,0 +1,19 @@
+{
+  "name": "Westpoint",
+  "title": "Westpoint Currency Exchange",
+  "baseCurrency": "Base Currency",
+  "exchangeCurrency": "Exchange Currency",
+  "langConfig": "Mudar para pt-br",
+  "selectTitle": "Select your currency",
+  "inputTitle": "Exchange your money",
+  "to": "to",
+  "is": "is",
+  "sendButton": "send",
+  "historyButton": "history",
+  "updateButton": "update",
+  "chart": "Exchange chart",
+  "currentExchange": "The current exchange",
+  "brazil": "Brazil (BRL)",
+  "unitedKingdom": "United Kingdom (GBP)",
+  "unitedStates": "United Stated (USD)"
+}

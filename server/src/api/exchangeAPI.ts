@@ -1,7 +1,7 @@
 import { api } from "./api";
 import 'dotenv/config';
 
-const key= 'UNPEHGNOR7XNN6LO';
+const key = 'UNPEHGNOR7XNN6LO';
 
 const calculateCurrencyExchange = async (baseCurrency: string, exchangeCurrency: string, num: number): Promise<string> => {
   const response = await api
@@ -9,7 +9,7 @@ const calculateCurrencyExchange = async (baseCurrency: string, exchangeCurrency:
   try {
     return response.data["Realtime Currency Exchange Rate"]["5. Exchange Rate"];
   } catch (err: any) {
-    console.log('Exchange:', num, err)
+    console.log(err);
     return '';
   };
 }
@@ -25,12 +25,12 @@ async function updateCurrency() {
   GBP_USD_Currency = await calculateCurrencyExchange('GBP', 'USD', 1);
   USD_GBP_Currency = await calculateCurrencyExchange('USD', 'GBP', 2);
 
-  await setTimeout(async() => {
+  await setTimeout(async () => {
     GBP_BRL_Currency = await calculateCurrencyExchange('GBP', 'BRL', 3);
     USD_BRL_Currency = await calculateCurrencyExchange('USD', 'BRL', 4);
   }, 1000 * 60);
 
-  await setTimeout(async() => {
+  await setTimeout(async () => {
     BRL_USD_Currency = await calculateCurrencyExchange('BRL', 'GBP', 3);
     BRL_GBP_Currency = await calculateCurrencyExchange('BRL', 'USD', 4);
   }, 1000 * 60 * 2);
